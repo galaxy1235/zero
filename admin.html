@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Webrent Admin — แผงควบคุมผู้ดูแลระบบ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body:not(.auth-ok) .app{display:none}
+.auth-wait{display:none;position:fixed;inset:0;z-index:100;place-items:center;background:#F8FAFC;color:#64748B;padding:24px;text-align:center}
+body:not(.auth-ok) .auth-wait{display:grid}
+:root{--p:#2563EB;--s:#60A5FA;--lb:#EFF6FF;--bg:#F8FAFC;--sf:#fff;--t:#0F172A;--t2:#64748B;--bd:#E2E8F0;--ac:#38BDF8;--ok:#16A34A;--wn:#D97706;--er:#DC2626}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:400 15px/1.6 'IBM Plex Sans Thai',system-ui,sans-serif;background:var(--bg);color:var(--t);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-weight:600;line-height:1.3}
+button,input{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px;border-radius:8px}
+svg.lucide{width:1.15em;height:1.15em;stroke-width:1.8;flex:none}
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+
+/* sidebar */
+aside{position:sticky;top:0;height:100vh;background:#fff;border-right:1px solid var(--bd);padding:20px 14px;display:flex;flex-direction:column;gap:6px;z-index:30}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;padding:4px 10px 18px}
+.logo b{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--p),var(--ac));color:#fff}
+.logo small{font-weight:500;font-size:12px;color:var(--p);background:var(--lb);padding:1px 8px;border-radius:99px}
+aside .nv{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 12px;border-radius:12px;color:var(--t2);font-weight:500;transition:.2s}
+aside .nv:hover{background:var(--bg);color:var(--t)}
+aside .nv.on{background:var(--lb);color:var(--p);font-weight:600}
+aside .nv em{margin-left:auto;font-style:normal;font-size:12px;background:var(--p);color:#fff;border-radius:99px;padding:0 8px}
+.me{margin-top:auto;display:flex;gap:10px;align-items:center;padding:12px;border:1px solid var(--bd);border-radius:14px}
+.av{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--s),var(--p));color:#fff;font-weight:600;font-size:14px;flex:none}
+.me div{min-width:0;font-size:14px;line-height:1.3}.me small{color:var(--t2)}
+.me button{margin-left:auto;color:var(--t2);padding:6px;border-radius:8px}.me button:hover{background:var(--bg);color:var(--er)}
+.scrim{display:none}
+
+/* topbar */
+.main{min-width:0}
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;height:68px;padding:0 28px;background:rgba(248,250,252,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
+.top h1{font-size:20px}.top .sp{flex:1}
+.ib{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid var(--bd);position:relative;transition:.2s}.ib:hover{border-color:var(--s);color:var(--p)}
+.ib i.dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--er);border:2px solid #fff}
+.menu{display:none}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:12px;font-weight:600;font-size:14px;transition:.2s}
+.pri{background:var(--p);color:#fff;box-shadow:0 6px 14px -6px rgba(37,99,235,.55)}.pri:hover{background:#1d4fd8}.pri:active{transform:scale(.97)}
+.gh{background:#fff;border:1px solid var(--bd)}.gh:hover{background:var(--lb);border-color:var(--s)}
+.sm{padding:6px 12px;font-size:13px;border-radius:9px}
+.page{padding:28px;display:grid;gap:20px;max-width:1280px}
+.view{display:none;gap:20px}.view.on{display:grid;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(6px)}}
+
+/* cards */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:20px}
+.kpi{display:grid;gap:4px}.kpi .l{display:flex;justify-content:space-between;align-items:center;color:var(--t2);font-size:14px}
+.kpi .ic{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--lb);color:var(--p)}
+.kpi b{font-size:28px;font-weight:700;letter-spacing:-.02em}.kpi .d{font-size:13px;display:flex;gap:6px;align-items:center;color:var(--t2)}
+.up{color:var(--ok);font-weight:600;display:inline-flex;gap:3px;align-items:center}.dn{color:var(--er);font-weight:600;display:inline-flex;gap:3px;align-items:center}
+.two{display:grid;grid-template-columns:1.6fr 1fr;gap:16px}
+.ch{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.ch h2{font-size:17px}.ch small{color:var(--t2)}
+.chart{position:relative}.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.tip{position:absolute;pointer-events:none;background:var(--t);color:#fff;font-size:13px;padding:6px 12px;border-radius:10px;transform:translate(-50%,-120%);white-space:nowrap;opacity:0;transition:opacity .15s}
+.exp{display:grid;gap:4px}
+.ex{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}.ex:last-child{border:0}
+.ex div{flex:1;min-width:0;line-height:1.35}.ex b{display:block;font-weight:500;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ex small{color:var(--t2);font-size:13px}
+.bars{display:grid;gap:14px}.br{display:grid;gap:5px;font-size:14px}.br div:first-child{display:flex;justify-content:space-between}.br span{color:var(--t2)}
+.bt{height:8px;border-radius:99px;background:var(--lb);overflow:hidden}.bt i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--p),var(--ac));transition:width .8s ease}
+
+/* tables */
+.tw{overflow-x:auto;margin:0 -20px;padding:0 20px}
+table{width:100%;border-collapse:collapse;min-width:640px;font-size:14.5px}
+th{text-align:left;font-weight:500;font-size:13px;color:var(--t2);padding:10px 12px;border-bottom:1px solid var(--bd);white-space:nowrap}
+td{padding:13px 12px;border-bottom:1px solid #f1f5f9;white-space:nowrap}tr:last-child td{border:0}
+tbody tr{transition:background .15s}tbody tr:hover{background:var(--bg)}
+.who{display:flex;gap:10px;align-items:center}.who .av{width:32px;height:32px;font-size:13px}
+td small{color:var(--t2);display:block;line-height:1.3}
+.bd{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:2px 10px;border-radius:99px}.bd::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-ok{color:var(--ok);background:#DCFCE7}.b-wn{color:#B45309;background:#FEF3C7}.b-er{color:var(--er);background:#FEE2E2}.b-in{color:var(--p);background:var(--lb)}
+.tb{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.sr{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:0 12px;flex:1;min-width:200px;max-width:340px;transition:.2s}.sr:focus-within{border-color:var(--s);box-shadow:0 0 0 3px rgba(96,165,250,.2)}
+.sr input{border:0;outline:0;background:none;padding:9px 0;width:100%}.sr svg{color:var(--t2)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chips button{padding:6px 14px;border-radius:99px;border:1px solid var(--bd);font-size:13.5px;color:var(--t2);background:#fff;transition:.2s}.chips button.on{background:var(--p);border-color:var(--p);color:#fff}
+.empty{text-align:center;color:var(--t2);padding:36px 0}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sc{display:grid;gap:10px}.sc .tp{display:flex;justify-content:space-between;align-items:center}
+.sc h3{font-size:16px}.sc small{color:var(--t2)}
+.sw{position:relative;width:42px;height:24px;border-radius:99px;background:var(--bd);transition:.25s;flex:none}.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:.25s}
+.sw[aria-checked=true]{background:var(--p)}.sw[aria-checked=true]::after{transform:translateX(18px)}
+.sk{border-radius:12px;background:linear-gradient(90deg,#eef2f7 25%,#f8fafc 50%,#eef2f7 75%);background-size:200% 100%;animation:sh 1.2s infinite;height:44px;margin-bottom:8px}@keyframes sh{to{background-position:-200% 0}}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;background:var(--t);color:#fff;padding:12px 20px;border-radius:12px;display:flex;gap:10px;align-items:center;transition:.35s;z-index:50;pointer-events:none;max-width:calc(100vw - 32px)}.toast.show{transform:translate(-50%,0);opacity:1}
+
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}.sg{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:860px){.app{grid-template-columns:1fr}
+aside{position:fixed;left:0;top:0;width:264px;transform:translateX(-100%);transition:transform .3s;box-shadow:0 0 40px rgba(15,23,42,.18)}
+body.open aside{transform:none}body.open .scrim{display:block;position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:25}
+.menu{display:grid}.top{padding:0 16px}.page{padding:16px}.top .btn span{display:none}}
+@media(max-width:560px){.kpis,.sg{grid-template-columns:1fr}.kpi b{font-size:24px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside id="side">
+  <div class="logo"><b><i data-lucide="layout-template"></i></b>Webrent <small>Admin</small></div>
+  <button class="nv on" data-v="overview"><i data-lucide="layout-dashboard"></i>ภาพรวม</button>
+  <button class="nv" data-v="rentals"><i data-lucide="key-round"></i>รายการเช่า<em id="cnt"></em></button>
+  <button class="nv" data-v="sites"><i data-lucide="globe"></i>เว็บไซต์ให้เช่า</button>
+  <button class="nv" data-v="customers"><i data-lucide="users"></i>ลูกค้า</button>
+  <div class="me"><span class="av">ผด</span><div><b>ผู้ดูแลระบบ</b><br><small>ssonx08@gmail.com</small></div><button id="logout" aria-label="ออกจากระบบ"><i data-lucide="log-out"></i></button></div>
+</aside>
+<div class="scrim" id="scrim"></div>
+
+<div class="main">
+  <header class="top">
+    <button class="ib menu" id="menu" aria-label="เปิดเมนู"><i data-lucide="menu"></i></button>
+    <h1 id="title">ภาพรวม</h1><div class="sp"></div>
+    <button class="ib" aria-label="การแจ้งเตือน" data-t="มีการแจ้งเตือนใหม่ 3 รายการ"><i data-lucide="bell"></i><i class="dot"></i></button>
+    <button class="btn pri" data-t="เปิดฟอร์มเพิ่มเว็บไซต์ (ตัวอย่าง)"><i data-lucide="plus"></i><span>เพิ่มเว็บไซต์</span></button>
+  </header>
+
+  <div class="page">
+    <!-- overview -->
+    <section class="view on" id="v-overview">
+      <div class="kpis" id="kpis"></div>
+      <div class="two">
+        <div class="card"><div class="ch"><div><h2>รายได้ 12 เดือนล่าสุด</h2><small>หน่วย: บาท</small></div><span class="bd b-in">ปี 2569</span></div>
+          <div class="chart" id="chart"><div class="tip" id="tip"></div></div></div>
+        <div class="card"><div class="ch"><h2>ใกล้หมดอายุ</h2><button class="btn gh sm" data-go="rentals">ดูทั้งหมด</button></div><div class="exp" id="exp"></div></div>
+      </div>
+      <div class="two">
+        <div class="card"><div class="ch"><h2>การเช่าล่าสุด</h2><button class="btn gh sm" data-go="rentals">ดูทั้งหมด</button></div><div class="tw" id="recent"></div></div>
+        <div class="card"><div class="ch"><h2>ยอดเช่าตามหมวดหมู่</h2></div><div class="bars" id="bars"></div></div>
+      </div>
+    </section>
+
+    <!-- rentals -->
+    <section class="view" id="v-rentals"><div class="card">
+      <div class="tb"><label class="sr"><i data-lucide="search"></i><input id="rq" type="search" placeholder="ค้นหาลูกค้าหรือเว็บไซต์" aria-label="ค้นหา"></label>
+      <div class="chips" id="rf"></div></div><div class="tw" id="rt"></div></div></section>
+
+    <!-- sites -->
+    <section class="view" id="v-sites"><div class="sg" id="sg"></div></section>
+
+    <!-- customers -->
+    <section class="view" id="v-customers"><div class="card"><div class="tw" id="ct"></div></div></section>
+  </div>
+</div>
+</div>
+<div class="toast" id="toast" role="status"><i data-lucide="check-circle-2"></i><span></span></div>
+<div class="auth-wait" role="status">กำลังตรวจสอบสิทธิ์ผู้ดูแลระบบ…</div>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+/* ===== ข้อมูลตัวอย่าง — แทนที่ด้วยข้อมูลจาก Supabase (ตาราง rentals, sites, customers) ===== */
+var REV=[96,104,98,121,133,128,147,152,161,158,166,186].map(function(n){return n*1000});
+var MON=['ธ.ค.','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.'];
+var RENTALS=[
+ {id:1,c:'บริษัท นาราภัณฑ์ จำกัด',s:'Corpo Prime',p:'รายปี',a:5900,st:'ok',e:'14 มี.ค. 2570'},
+ {id:2,c:'สมชาย ใจดี',s:'Shoply Store',p:'รายเดือน',a:990,st:'wn',e:'4 พ.ย. 2569'},
+ {id:3,c:'ร้านกาแฟบ้านสวน',s:'Launch One',p:'รายเดือน',a:299,st:'wn',e:'6 พ.ย. 2569'},
+ {id:4,c:'ณัฐวุฒิ ศรีสุข',s:'Folio Studio',p:'รายปี',a:3900,st:'ok',e:'2 ก.ค. 2570'},
+ {id:5,c:'Learn With Mint',s:'Learnly Course',p:'รายเดือน',a:1290,st:'in',e:'—'},
+ {id:6,c:'คลินิกผิวใส',s:'Servo Booking',p:'รายปี',a:6900,st:'ok',e:'20 ม.ค. 2570'},
+ {id:7,c:'พิมพ์ชนก แก้วมณี',s:'Shoply Store',p:'รายเดือน',a:990,st:'er',e:'28 ต.ค. 2569'},
+ {id:8,c:'สตูดิโอ ภาพนิ่ง',s:'Folio Studio',p:'รายเดือน',a:390,st:'wn',e:'8 พ.ย. 2569'},
+ {id:9,c:'ธนากร เทรดดิ้ง',s:'Corpo Prime',p:'รายเดือน',a:590,st:'ok',e:'25 พ.ย. 2569'},
+ {id:10,c:'อรุณี เบเกอรี่',s:'Launch One',p:'รายปี',a:2990,st:'in',e:'—'}];
+var SITES=[['Shoply Store','ร้านค้าออนไลน์',64,990,1],['Corpo Prime','เว็บไซต์บริษัท',48,590,1],['Folio Studio','เว็บไซต์ Portfolio',36,390,1],['Learnly Course','เว็บไซต์คอร์สออนไลน์',29,1290,1],['Servo Booking','เว็บไซต์ธุรกิจบริการ',41,690,1],['Launch One','เว็บไซต์ Landing Page',57,299,0]];
+var CUST=[['บริษัท นาราภัณฑ์ จำกัด','narapan@example.com',2,'ก.พ. 2568'],['สมชาย ใจดี','somchai@example.com',1,'มิ.ย. 2568'],['ร้านกาแฟบ้านสวน','bansuan@example.com',1,'ส.ค. 2568'],['ณัฐวุฒิ ศรีสุข','nattawut@example.com',3,'ม.ค. 2568'],['Learn With Mint','mint@example.com',1,'ต.ค. 2569'],['คลินิกผิวใส','skinclear@example.com',2,'เม.ย. 2568']];
+var ST={ok:'ใช้งานอยู่',wn:'ใกล้หมดอายุ',er:'หมดอายุ',in:'รอชำระเงิน'};
+
+var $=function(s){return document.querySelector(s)},fmt=function(n){return n.toLocaleString('th-TH')},ic=function(){window.lucide&&lucide.createIcons()};
+var ini=function(n){return n.replace(/^(บริษัท|ร้าน|คลินิก|สตูดิโอ)\s*/,'').charAt(0)};
+var tt;function toast(m){var t=$('#toast');t.querySelector('span').textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},2400)}
+
+/* components */
+function badge(s){return '<span class="bd b-'+s+'">'+ST[s]+'</span>'}
+function who(n,sub){return '<div class="who"><span class="av">'+ini(n)+'</span><div>'+n+(sub?'<small>'+sub+'</small>':'')+'</div></div>'}
+function table(head,rows){return '<table><thead><tr>'+head.map(function(h){return '<th>'+h+'</th>'}).join('')+'</tr></thead><tbody>'+rows+'</tbody></table>'}
+function action(r){return r.st=='in'?'<button class="btn gh sm" data-act="paid" data-id="'+r.id+'">ยืนยันชำระ</button>':r.st=='er'||r.st=='wn'?'<button class="btn pri sm" data-act="renew" data-id="'+r.id+'">ต่ออายุ</button>':'<button class="btn gh sm" data-act="susp" data-id="'+r.id+'">พักเว็บ</button>'}
+function rentRow(r){return '<tr><td>'+who(r.c)+'</td><td>'+r.s+'</td><td>'+r.p+'</td><td>฿'+fmt(r.a)+'</td><td>'+badge(r.st)+'</td><td>'+r.e+'</td><td>'+action(r)+'</td></tr>'}
+var RH=['ลูกค้า','เว็บไซต์','แพ็กเกจ','ยอด','สถานะ','หมดอายุ',''];
+
+/* overview */
+function kpis(){var act=RENTALS.filter(function(r){return r.st=='ok'}).length,exp=RENTALS.filter(function(r){return r.st=='wn'}).length;
+ var K=[['wallet','รายได้เดือนนี้','฿186,400','up','12.4%'],['key-round','การเช่าที่ใช้งานอยู่','342','up','8.1%'],['user-plus','ลูกค้าใหม่เดือนนี้','48','up','5.6%'],['calendar-clock','ใกล้หมดอายุใน 7 วัน','17','dn','3 รายการ']];
+ $('#kpis').innerHTML=K.map(function(k){return '<div class="card kpi"><div class="l">'+k[1]+'<span class="ic"><i data-lucide="'+k[0]+'"></i></span></div><b>'+k[2]+'</b><div class="d"><span class="'+k[3]+'"><i data-lucide="trending-'+(k[3]=='up'?'up':'down')+'"></i>'+k[4]+'</span>จากเดือนก่อน</div></div>'}).join('')}
+function chart(){var W=600,H=220,P=28,mx=200000,pts=REV.map(function(v,i){return [P+i*(W-2*P)/11,H-P-(v/mx)*(H-2*P)]});
+ var line=pts.map(function(p,i){return (i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)}).join(' ');
+ var g='';[0,50,100,150,200].forEach(function(v){var y=H-P-(v*1000/mx)*(H-2*P);g+='<line x1="'+P+'" x2="'+(W-P)+'" y1="'+y+'" y2="'+y+'" stroke="#E2E8F0" stroke-dasharray="3 4"/><text x="0" y="'+(y+4)+'" font-size="11" fill="#64748B">'+v+'k</text>'});
+ var x=MON.map(function(m,i){return '<text x="'+pts[i][0]+'" y="'+(H-6)+'" font-size="11" fill="#64748B" text-anchor="middle">'+m+'</text>'}).join('');
+ $('#chart').insertAdjacentHTML('afterbegin','<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="กราฟรายได้ 12 เดือน"><defs><linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#60A5FA" stop-opacity=".35"/><stop offset="1" stop-color="#60A5FA" stop-opacity="0"/></linearGradient></defs>'+g+'<path d="'+line+' L'+pts[11][0]+' '+(H-P)+' L'+pts[0][0]+' '+(H-P)+'Z" fill="url(#gr)"/><path d="'+line+'" fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+x+'<circle id="pt" r="5" fill="#fff" stroke="#2563EB" stroke-width="2.5" opacity="0"/></svg>');
+ var svg=$('#chart svg'),tip=$('#tip'),pt=$('#pt');
+ function mv(e){var r=svg.getBoundingClientRect(),cx=((e.touches?e.touches[0].clientX:e.clientX)-r.left)/r.width*W,i=0,d=1e9;pts.forEach(function(p,k){var q=Math.abs(p[0]-cx);if(q<d){d=q;i=k}});
+  pt.setAttribute('cx',pts[i][0]);pt.setAttribute('cy',pts[i][1]);pt.setAttribute('opacity',1);tip.style.opacity=1;tip.style.left=(pts[i][0]/W*r.width)+'px';tip.style.top=(pts[i][1]/H*r.height)+'px';tip.textContent=MON[i]+' · ฿'+fmt(REV[i])}
+ svg.addEventListener('mousemove',mv);svg.addEventListener('touchmove',mv,{passive:true});
+ svg.addEventListener('mouseleave',function(){pt.setAttribute('opacity',0);tip.style.opacity=0})}
+function expiring(){var l=RENTALS.filter(function(r){return r.st=='wn'});
+ $('#exp').innerHTML=l.length?l.map(function(r){return '<div class="ex"><span class="av">'+ini(r.c)+'</span><div><b>'+r.c+'</b><small>'+r.s+' · หมด '+r.e+'</small></div><button class="btn pri sm" data-act="renew" data-id="'+r.id+'">ต่ออายุ</button></div>'}).join(''):'<div class="empty">ไม่มีรายการใกล้หมดอายุ</div>'}
+function bars(){var t=SITES.reduce(function(a,s){return a+s[2]},0);
+ $('#bars').innerHTML=SITES.slice().sort(function(a,b){return b[2]-a[2]}).map(function(s){return '<div class="br"><div>'+s[1]+'<span>'+s[2]+' เว็บ</span></div><div class="bt"><i style="width:0" data-w="'+Math.round(s[2]/t*100*2.4)+'%"></i></div></div>'}).join('');
+ setTimeout(function(){document.querySelectorAll('.bt i').forEach(function(e){e.style.width=e.dataset.w})},120)}
+function recent(){$('#recent').innerHTML=table(RH,RENTALS.slice(0,5).map(rentRow).join(''))}
+
+/* rentals */
+var F='all',Q='';
+function rentals(){var fs=[['all','ทั้งหมด'],['ok','ใช้งานอยู่'],['wn','ใกล้หมดอายุ'],['er','หมดอายุ'],['in','รอชำระเงิน']];
+ $('#rf').innerHTML=fs.map(function(f){return '<button data-f="'+f[0]+'" class="'+(F==f[0]?'on':'')+'">'+f[1]+'</button>'}).join('');
+ var l=RENTALS.filter(function(r){return (F=='all'||r.st==F)&&(r.c+r.s).toLowerCase().indexOf(Q.toLowerCase())>-1});
+ $('#rt').innerHTML=l.length?table(RH,l.map(rentRow).join('')):'<div class="empty">ไม่พบรายการที่ตรงกับเงื่อนไข</div>';
+ var n=RENTALS.filter(function(r){return r.st=='wn'||r.st=='in'}).length;$('#cnt').textContent=n;ic()}
+
+/* sites + customers */
+function sites(){$('#sg').innerHTML=SITES.map(function(s,i){return '<div class="card sc"><div class="tp"><span class="bd '+(s[4]?'b-ok':'b-wn')+'">'+(s[4]?'เปิดให้เช่า':'ปิดชั่วคราว')+'</span><button class="sw" role="switch" aria-checked="'+(s[4]?'true':'false')+'" aria-label="เปิด/ปิดให้เช่า '+s[0]+'" data-sw="'+i+'"></button></div><h3>'+s[0]+'</h3><small>'+s[1]+'</small><div style="display:flex;justify-content:space-between;border-top:1px solid var(--bd);padding-top:10px"><span><small>ราคา/เดือน</small><br><b>฿'+fmt(s[3])+'</b></span><span style="text-align:right"><small>ผู้เช่าอยู่</small><br><b>'+s[2]+'</b></span></div></div>'}).join('')}
+function custs(){$('#ct').innerHTML=table(['ลูกค้า','อีเมล','เว็บที่เช่า','สมัครเมื่อ'],CUST.map(function(c){return '<tr><td>'+who(c[0])+'</td><td>'+c[1]+'</td><td>'+c[2]+' เว็บ</td><td>'+c[3]+'</td></tr>'}).join(''))}
+
+/* actions */
+function refresh(){kpis();expiring();recent();rentals();ic()}
+document.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;
+ if(t.dataset.t)toast(t.dataset.t);
+ if(t.dataset.v)go(t.dataset.v);if(t.dataset.go)go(t.dataset.go);
+ if(t.dataset.f){F=t.dataset.f;rentals()}
+ if(t.dataset.sw){var s=SITES[t.dataset.sw];s[4]=s[4]?0:1;sites();ic();toast(s[0]+(s[4]?' เปิดให้เช่าแล้ว':' ปิดให้เช่าชั่วคราว'))}
+ if(t.dataset.act){var r=RENTALS.filter(function(x){return x.id==t.dataset.id})[0],a=t.dataset.act;
+  if(a=='susp'){r.st='er';toast('พักเว็บของ '+r.c+' แล้ว')}else{r.st='ok';r.e=a=='paid'?'30 พ.ย. 2569':'1 ธ.ค. 2569';toast((a=='paid'?'ยืนยันการชำระเงิน ':'ต่ออายุให้ ')+r.c+' แล้ว')}
+  refresh()}});
+$('#rq').addEventListener('input',function(){Q=this.value.trim();rentals()});
+var TT={overview:'ภาพรวม',rentals:'รายการเช่า',sites:'เว็บไซต์ให้เช่า',customers:'ลูกค้า'};
+function go(v){document.querySelectorAll('.view').forEach(function(s){s.classList.toggle('on',s.id=='v-'+v)});
+ document.querySelectorAll('.nv').forEach(function(b){b.classList.toggle('on',b.dataset.v==v)});$('#title').textContent=TT[v];document.body.classList.remove('open');scrollTo(0,0)}
+$('#menu').addEventListener('click',function(){document.body.classList.add('open')});$('#scrim').addEventListener('click',function(){document.body.classList.remove('open')});
+
+/* boot: skeleton → data */
+$('#kpis').innerHTML='<div class="sk" style="height:112px;grid-column:1/-1"></div>';
+setTimeout(function(){refresh();chart();bars();sites();custs();ic()},500);
+ic();
+</script>
+<script>
+(async function(){
+  var cfg=window.WEBRENT_SUPABASE,adminEmail='ssonx08@gmail.com';
+  if(!window.supabase||!cfg||!cfg.url||cfg.url.indexOf('YOUR-PROJECT')>-1||!cfg.anonKey||cfg.anonKey.indexOf('YOUR_')===0){location.replace('auth.html?next=admin.html');return}
+  try{
+    var client=window.supabase.createClient(cfg.url,cfg.anonKey);
+    var result=await client.auth.getSession(),session=result.data&&result.data.session;
+    if(!session||!session.user.email||session.user.email.toLowerCase()!==adminEmail){await client.auth.signOut();location.replace('auth.html?next=admin.html');return}
+    document.body.classList.add('auth-ok');
+    document.getElementById('logout').addEventListener('click',async function(){await client.auth.signOut();location.replace('auth.html')});
+  }catch(e){location.replace('auth.html?next=admin.html')}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ชำระเงิน — Webrent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#2563EB;--s:#60A5FA;--lb:#EFF6FF;--bg:#F8FAFC;--t:#0F172A;--t2:#64748B;--bd:#E2E8F0;--ac:#38BDF8;--ok:#16A34A;--er:#DC2626}
+*{box-sizing:border-box;margin:0}
+body{font:400 16px/1.65 'IBM Plex Sans Thai',system-ui,sans-serif;background:var(--bg);color:var(--t);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-weight:600;line-height:1.3}
+a{color:inherit;text-decoration:none}button,input,select{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px;border-radius:8px}
+svg.lucide{width:1.15em;height:1.15em;stroke-width:1.8;flex:none}
+.w{max-width:1080px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 24px;border-radius:12px;font-weight:600;font-size:15.5px;transition:.2s}
+.btn:active{transform:scale(.98)}.pri{background:var(--p);color:#fff;box-shadow:0 6px 16px -6px rgba(37,99,235,.55)}.pri:hover{background:#1d4fd8}.pri:disabled{opacity:.6;cursor:wait}
+.sec{background:#fff;border:1px solid var(--bd)}.sec:hover{background:var(--lb);border-color:var(--s)}
+header{background:rgba(255,255,255,.8);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:20}
+header .w{display:flex;align-items:center;height:64px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px}.logo b{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--p),var(--ac));color:#fff}
+.sl{margin-left:auto;display:flex;gap:6px;align-items:center;color:var(--t2);font-size:14px}.sl svg{color:var(--ok)}
+
+.steps{display:flex;align-items:center;justify-content:center;gap:10px;padding:26px 0 22px;font-size:14.5px;color:var(--t2)}
+.steps span{display:flex;align-items:center;gap:8px}.steps i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2px solid var(--bd);background:#fff;font-style:normal;font-size:13px;font-weight:600}
+.steps .on{color:var(--t);font-weight:600}.steps .on i{border-color:var(--p);background:var(--p);color:#fff}.steps .dn i{border-color:var(--p);color:var(--p)}
+.steps hr{width:40px;border:0;border-top:2px solid var(--bd)}
+@media(max-width:560px){.steps{font-size:13px;gap:6px}.steps hr{width:16px}.steps span b{display:none}.steps .on b{display:inline}}
+
+.lay{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;align-items:start;padding-bottom:80px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:20px;padding:26px;margin-bottom:18px}
+.card>h2{display:flex;gap:12px;align-items:center;font-size:18px;margin-bottom:18px}.card>h2 i{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--lb);color:var(--p);font-style:normal;font-size:14px}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:16px}.fg .full{grid-column:1/-1}
+label.f{display:grid;gap:6px;font-size:14.5px;font-weight:500}
+input[type=text],input[type=email],input[type=tel]{padding:12px 14px;border:1px solid var(--bd);border-radius:12px;outline:0;background:#fff;transition:.2s;width:100%}
+input:focus{border-color:var(--s);box-shadow:0 0 0 3px rgba(96,165,250,.22)}
+.f.bad input{border-color:var(--er)}.err{color:var(--er);font-size:13px;font-weight:400;min-height:0;display:none}.f.bad .err{display:block}
+.opt{display:grid;gap:10px}
+.o{display:flex;gap:14px;align-items:flex-start;border:1.5px solid var(--bd);border-radius:14px;padding:14px 16px;cursor:pointer;transition:.2s;background:#fff}
+.o:hover{border-color:var(--s)}.o:has(input:checked){border-color:var(--p);background:var(--lb)}
+.o:has(input:focus-visible){outline:3px solid var(--ac);outline-offset:2px}
+.o input{accent-color:var(--p);width:18px;height:18px;margin-top:4px;flex:none}
+.o .ic{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--lb);color:var(--p);flex:none}.o:has(input:checked) .ic{background:#fff}
+.o b{display:block;font-weight:600;font-size:15.5px}.o small{color:var(--t2);font-size:14px;display:block;line-height:1.5}
+.o .tag{margin-left:auto;font-size:12px;font-weight:600;color:var(--ok);background:#DCFCE7;padding:1px 10px;border-radius:99px;white-space:nowrap}
+.sub{margin:12px 0 0 0;display:none}.sub.on{display:block}
+
+.pay{margin-top:16px;border:1px dashed var(--s);border-radius:16px;padding:20px;background:#fff;display:none}.pay.on{display:block;animation:in .3s ease}@keyframes in{from{opacity:0;transform:translateY(6px)}}
+.qrw{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.qr{width:168px;height:168px;padding:10px;border:1px solid var(--bd);border-radius:14px;background:#fff;position:relative;flex:none}.qr svg{width:100%;height:100%;display:block}
+.qr.ex svg{opacity:.12}.qr.ex::after{content:"หมดอายุ";position:absolute;inset:0;display:grid;place-items:center;font-weight:600;color:var(--er)}
+.qrw .tx{flex:1;min-width:200px;font-size:14.5px;color:var(--t2)}.qrw .tx b{color:var(--t);font-size:22px;display:block}.tm{font-weight:600;color:var(--p)}
+.acct{display:grid;gap:8px;font-size:14.5px}.acct div{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)}.acct div:last-child{border:0}.acct span{color:var(--t2)}
+.cp{color:var(--p);font-size:13px;font-weight:600;display:inline-flex;gap:4px;align-items:center;margin-left:8px}
+.up{display:flex;gap:10px;align-items:center;margin-top:14px;padding:14px;border:1px dashed var(--bd);border-radius:12px;cursor:pointer;color:var(--t2);font-size:14.5px;transition:.2s}.up:hover{border-color:var(--s);color:var(--p)}.up input{display:none}
+.note{display:flex;gap:10px;font-size:14px;color:var(--t2)}.note svg{color:var(--p);margin-top:5px}
+.chk{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;color:var(--t2);cursor:pointer}.chk input{accent-color:var(--p);width:18px;height:18px;margin-top:4px;flex:none}.chk a{color:var(--p);text-decoration:underline}
+.chk.bad{color:var(--er)}
+
+/* summary */
+.sm{position:sticky;top:84px}.sm h2{font-size:18px;margin-bottom:16px}
+.it{display:flex;gap:14px;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bd)}
+.th{width:76px;height:58px;border-radius:10px;flex:none}.it b{display:block;font-weight:600}.it small{color:var(--t2);font-size:13.5px}
+.tg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:12px;padding:4px;margin:16px 0}
+.tg button{padding:7px;border-radius:9px;font-weight:500;font-size:14px;color:var(--t2);transition:.2s}.tg button[aria-pressed=true]{background:#fff;color:var(--p);box-shadow:0 1px 4px rgba(15,23,42,.12)}
+.cp2{display:flex;gap:8px}.cp2 input{flex:1;min-width:0;padding:10px 14px;border:1px solid var(--bd);border-radius:12px;outline:0}.cp2 .btn{padding:10px 16px;font-size:14px}
+.cm{font-size:13.5px;min-height:22px;margin:6px 0 4px}.cm.ok{color:var(--ok)}.cm.no{color:var(--er)}
+.ln{display:flex;justify-content:space-between;font-size:15px;padding:5px 0;color:var(--t2)}.ln b{color:var(--t);font-weight:500}.ln.d b{color:var(--ok)}
+.tt{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid var(--bd);margin-top:8px;padding-top:14px}.tt span{font-weight:600}.tt b{font-size:30px;font-weight:700;letter-spacing:-.02em}
+.sm .btn{width:100%;margin-top:16px}.vt{font-size:12.5px;color:var(--t2);text-align:right;margin-top:-2px}
+.sf{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--t2);font-size:13px;margin-top:14px}.sf svg{color:var(--ok)}
+
+.mbar{display:none}
+.ok-card{text-align:center;max-width:560px;margin:20px auto 80px;padding:44px 28px}
+.ok-card .big{display:grid;place-items:center;width:72px;height:72px;margin:0 auto 18px;border-radius:50%;background:#DCFCE7;color:var(--ok)}.ok-card .big svg{width:36px;height:36px}
+.ok-card h1{font-size:26px;margin-bottom:6px}.ok-card p{color:var(--t2)}
+.ok-card .sum{text-align:left;background:var(--bg);border-radius:14px;padding:16px 18px;margin:24px 0;display:grid;gap:6px;font-size:14.5px}.ok-card .sum div{display:flex;justify-content:space-between;gap:12px}.ok-card .sum span{color:var(--t2)}
+.nx{text-align:left;display:grid;gap:10px;font-size:14.5px;margin-bottom:24px}.nx div{display:flex;gap:10px}.nx svg{color:var(--p);margin-top:4px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,40px);opacity:0;background:var(--t);color:#fff;padding:11px 18px;border-radius:12px;font-size:14.5px;transition:.35s;z-index:50;pointer-events:none;max-width:calc(100vw - 32px)}.toast.show{transform:translate(-50%,0);opacity:1}
+
+@media(max-width:940px){.lay{grid-template-columns:1fr}.sm{position:static;order:-1}.sm .btn,.sm .sf{display:none}
+.mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:15;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--bd);padding:12px 20px;gap:14px;align-items:center}
+.mbar div{line-height:1.3}.mbar small{color:var(--t2);font-size:12.5px;display:block}.mbar b{font-size:20px}.mbar .btn{margin-left:auto}}
+@media(max-width:560px){.fg{grid-template-columns:1fr}.card{padding:20px}.qr{margin:0 auto}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="w"><a class="logo" href="index.html"><b><i data-lucide="layout-template"></i></b>Webrent</a><span class="sl"><i data-lucide="lock"></i>การชำระเงินปลอดภัย</span></div></header>
+
+<main class="w" id="main">
+  <div class="steps" id="steps"><span class="dn"><i><svg class="lucide" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5"/></svg></i><b>เลือกเว็บไซต์</b></span><hr><span class="on"><i>2</i><b>ชำระเงิน</b></span><hr><span><i>3</i><b>เสร็จสิ้น</b></span></div>
+
+  <div class="lay" id="lay">
+    <form id="f" novalidate>
+      <section class="card"><h2><i>1</i>ข้อมูลผู้เช่า</h2>
+        <div class="fg">
+          <label class="f full" id="g-name">ชื่อ-นามสกุล หรือชื่อบริษัท<input type="text" id="name" autocomplete="name"><span class="err">กรุณากรอกชื่อ</span></label>
+          <label class="f" id="g-email">อีเมล<input type="email" id="email" autocomplete="email" inputmode="email"><span class="err">กรุณากรอกอีเมลให้ถูกต้อง</span></label>
+          <label class="f" id="g-tel">เบอร์โทรศัพท์<input type="tel" id="tel" autocomplete="tel" inputmode="tel" placeholder="0812345678"><span class="err">กรุณากรอกเบอร์โทร 9–10 หลัก</span></label>
+          <label class="f full" id="g-tax">เลขประจำตัวผู้เสียภาษี (ถ้าต้องการใบกำกับภาษี)<input type="text" id="tax" inputmode="numeric" maxlength="13" placeholder="ไม่บังคับ"></label>
+        </div>
+      </section>
+
+      <section class="card"><h2><i>2</i>โดเมนเว็บไซต์</h2>
+        <div class="opt">
+          <label class="o"><input type="radio" name="dm" value="free" checked><span class="ic"><i data-lucide="globe"></i></span><span><b>ใช้โดเมนย่อยฟรี</b><small id="subd">ชื่อร้าน.webrent.co — เริ่มใช้งานได้ทันที</small></span><span class="tag">ฟรี</span></label>
+          <label class="o"><input type="radio" name="dm" value="own"><span class="ic"><i data-lucide="link"></i></span><span><b>ใช้โดเมนของตัวเอง</b><small>ทีมงานช่วยเชื่อมโดเมนและติดตั้ง SSL ให้</small></span></label>
+        </div>
+        <label class="f sub" id="own" style="margin-top:12px">ชื่อโดเมนของคุณ<input type="text" id="dom" placeholder="เช่น myshop.com" autocomplete="off"><span class="err">กรุณากรอกโดเมน เช่น myshop.com</span></label>
+      </section>
+
+      <section class="card"><h2><i>3</i>ช่องทางชำระเงิน</h2>
+        <div class="opt" id="pm">
+          <label class="o"><input type="radio" name="pm" value="qr" checked><span class="ic"><i data-lucide="qr-code"></i></span><span><b>PromptPay QR</b><small>สแกนจ่ายผ่านแอปธนาคาร ยืนยันอัตโนมัติ</small></span><span class="tag">แนะนำ</span></label>
+          <label class="o"><input type="radio" name="pm" value="bank"><span class="ic"><i data-lucide="landmark"></i></span><span><b>โอนผ่านธนาคาร</b><small>โอนแล้วแนบสลิป ทีมงานตรวจสอบภายใน 1 ชั่วโมง (เวลาทำการ)</small></span></label>
+          <label class="o"><input type="radio" name="pm" value="card"><span class="ic"><i data-lucide="credit-card"></i></span><span><b>บัตรเครดิต / เดบิต</b><small>ชำระผ่านหน้าปลอดภัยของผู้ให้บริการชำระเงิน</small></span></label>
+        </div>
+
+        <div class="pay on" id="p-qr"><div class="qrw"><div class="qr" id="qr"></div><div class="tx">ยอดที่ต้องชำระ<b id="qa"></b>สแกนด้วยแอปธนาคารใดก็ได้<br>QR หมดอายุใน <span class="tm" id="tm">15:00</span><br><button type="button" class="cp" id="rq"><i data-lucide="refresh-cw"></i>สร้าง QR ใหม่</button></div></div></div>
+        <div class="pay" id="p-bank"><div class="acct"><div><span>ธนาคาร</span><b>กสิกรไทย</b></div><div><span>ชื่อบัญชี</span><b>บจก. เว็บเร้นท์ (ตัวอย่าง)</b></div><div><span>เลขที่บัญชี</span><b><span id="an" style="color:var(--t)">000-0-00000-0</span><button type="button" class="cp" id="cpy"><i data-lucide="copy"></i>คัดลอก</button></b></div></div>
+          <label class="up"><i data-lucide="upload"></i><span id="sf">แนบสลิปการโอนเงิน (JPG, PNG)</span><input type="file" id="slip" accept="image/*"></label></div>
+        <div class="pay" id="p-card"><div class="note"><i data-lucide="shield-check"></i><span>เมื่อกดชำระเงิน ระบบจะพาไปหน้าชำระเงินของผู้ให้บริการ (เช่น Omise หรือ Stripe) เพื่อกรอกข้อมูลบัตร เราไม่เก็บเลขบัตรของคุณ</span></div></div>
+      </section>
+
+      <label class="chk" id="g-tos"><input type="checkbox" id="tos"><span>ฉันยอมรับ <a href="#">ข้อกำหนดการใช้บริการ</a> และ <a href="#">นโยบายความเป็นส่วนตัว</a> รวมถึงเงื่อนไขการต่ออายุอัตโนมัติ</span></label>
+    </form>
+
+    <aside class="card sm" id="sm">
+      <h2>สรุปรายการ</h2>
+      <div class="it"><div class="th" id="th"></div><div><b id="sn"></b><small id="sc"></small></div></div>
+      <div class="tg" id="tg"><button type="button" data-c="m" aria-pressed="true">รายเดือน</button><button type="button" data-c="y" aria-pressed="false">รายปี</button></div>
+      <div class="cp2"><input id="cd" placeholder="โค้ดส่วนลด" aria-label="โค้ดส่วนลด" autocomplete="off"><button type="button" class="btn sec" id="ap">ใช้โค้ด</button></div>
+      <div class="cm" id="cm" role="status"></div>
+      <div class="ln"><span id="l1">ค่าเช่า</span><b id="v1"></b></div>
+      <div class="ln d" id="ld" style="display:none"><span>ส่วนลด</span><b id="vd"></b></div>
+      <div class="tt"><span>ยอดชำระรวม</span><b id="tot"></b></div><div class="vt" id="vat"></div>
+      <button class="btn pri" type="submit" form="f" id="pay"><i data-lucide="lock"></i><span>ชำระเงิน</span></button>
+      <div class="sf"><i data-lucide="shield-check"></i>ข้อมูลของคุณถูกเข้ารหัสและปลอดภัย</div>
+    </aside>
+  </div>
+</main>
+<div class="mbar" id="mbar"><div><small>ยอดชำระรวม</small><b id="mt"></b></div><button class="btn pri" type="submit" form="f" id="pay2"><i data-lucide="lock"></i>ชำระเงิน</button></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ตัวอย่าง — จริงต้องสร้างออเดอร์ที่เซิร์ฟเวอร์ (Supabase Edge Function) และใช้ payment gateway ยืนยันยอดเอง */
+var SITES=[['Shoply Store','ร้านค้าออนไลน์',990,9900,'#2563EB','#38BDF8'],['Corpo Prime','เว็บไซต์บริษัท',590,5900,'#1E3A8A','#60A5FA'],['Folio Studio','เว็บไซต์ Portfolio',390,3900,'#0EA5E9','#BAE6FD'],['Learnly Course','เว็บไซต์คอร์สออนไลน์',1290,12900,'#3B82F6','#93C5FD'],['Servo Booking','เว็บไซต์ธุรกิจบริการ',690,6900,'#2563EB','#7DD3FC'],['Launch One','เว็บไซต์ Landing Page',299,2990,'#38BDF8','#E0F2FE']];
+var COUPONS={WELCOME10:10};
+var $=function(s){return document.querySelector(s)},fmt=function(n){return '฿'+n.toLocaleString('th-TH',{maximumFractionDigits:2})},ic=function(){window.lucide&&lucide.createIcons()};
+var q=new URLSearchParams(location.search),id=parseInt(q.get('id'),10);if(!(id>=0&&id<SITES.length))id=0;
+var S=SITES[id],cy=q.get('c')=='y'?'y':'m',disc=0,code='';
+var tt;function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},2400)}
+
+/* summary */
+function calc(){var base=cy=='m'?S[2]:S[3],d=Math.round(base*disc/100);return {base:base,d:d,tot:base-d}}
+function render(){var c=calc();$('#sn').textContent=S[0];$('#sc').textContent=S[1];$('#th').style.background='linear-gradient(120deg,'+S[4]+','+S[5]+')';
+ $('#l1').textContent='ค่าเช่า'+(cy=='m'?'รายเดือน':'รายปี');$('#v1').textContent=fmt(c.base);
+ $('#ld').style.display=c.d?'flex':'none';$('#vd').textContent='-'+fmt(c.d);
+ $('#tot').textContent=fmt(c.tot);$('#mt').textContent=fmt(c.tot);$('#qa').textContent=fmt(c.tot);
+ $('#vat').textContent='รวมภาษีมูลค่าเพิ่ม 7% แล้ว ('+fmt(c.tot*7/107)+')';
+ $('#tg').querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c==cy)});drawQR();}
+
+/* demo QR (decorative placeholder, NOT a scannable code) */
+function drawQR(){var n=25,s=0,seed=id*97+(cy=='m'?3:7)+Math.round(calc().tot),r=function(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff};
+ var f=function(x,y){return (x<8&&y<8)||(x>n-9&&y<8)||(x<8&&y>n-9)},cells='';
+ for(var y=0;y<n;y++)for(var x=0;x<n;x++){if(f(x,y))continue;if(r()>.52)cells+='<rect x="'+x+'" y="'+y+'" width="1" height="1"/>'}
+ var fp=function(x,y){return '<rect x="'+x+'" y="'+y+'" width="7" height="7"/><rect x="'+(x+1)+'" y="'+(y+1)+'" width="5" height="5" fill="#fff"/><rect x="'+(x+2)+'" y="'+(y+2)+'" width="3" height="3"/>'};
+ $('#qr').innerHTML='<svg viewBox="0 0 '+n+' '+n+'" shape-rendering="crispEdges" fill="#0F172A" aria-label="QR ตัวอย่าง">'+cells+fp(0,0)+fp(n-7,0)+fp(0,n-7)+'</svg>'}
+var tmr,left=900;function startTimer(){clearInterval(tmr);left=900;$('#qr').classList.remove('ex');tick();tmr=setInterval(tick,1000)}
+function tick(){if(left<=0){clearInterval(tmr);$('#qr').classList.add('ex');$('#tm').textContent='หมดอายุแล้ว';return}
+ $('#tm').textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');left--}
+
+/* events */
+document.addEventListener('click',function(e){
+ var t=e.target.closest('button');if(!t)return;
+ if(t.dataset.c){cy=t.dataset.c;render()}
+ if(t.id=='ap'){var v=$('#cd').value.trim().toUpperCase(),m=$('#cm');if(COUPONS[v]){disc=COUPONS[v];code=v;m.className='cm ok';m.textContent='ใช้โค้ด '+v+' ลด '+disc+'% แล้ว'}else{disc=0;code='';m.className='cm no';m.textContent=v?'ไม่พบโค้ดนี้ หรือหมดอายุแล้ว':'กรุณากรอกโค้ดส่วนลด'}render()}
+ if(t.id=='rq'){startTimer();toast('สร้าง QR ใหม่แล้ว')}
+ if(t.id=='cpy'){var n=$('#an').textContent;(navigator.clipboard?navigator.clipboard.writeText(n):Promise.reject()).then(function(){toast('คัดลอกเลขบัญชีแล้ว')},function(){toast('คัดลอกไม่สำเร็จ กรุณาคัดลอกเอง')})}});
+document.querySelectorAll('input[name=pm]').forEach(function(r){r.addEventListener('change',function(){
+ ['qr','bank','card'].forEach(function(k){$('#p-'+k).classList.toggle('on',k==r.value)});
+ $('#pay span').textContent=r.value=='qr'?'ชำระเงิน':r.value=='bank'?'แจ้งโอนเงิน':'ไปหน้าชำระด้วยบัตร';if(r.value=='qr')startTimer()})});
+document.querySelectorAll('input[name=dm]').forEach(function(r){r.addEventListener('change',function(){$('#own').classList.toggle('on',r.value=='own')})});
+$('#slip').addEventListener('change',function(){$('#sf').textContent=this.files[0]?this.files[0].name:'แนบสลิปการโอนเงิน (JPG, PNG)'});
+document.querySelectorAll('input').forEach(function(i){i.addEventListener('input',function(){var g=i.closest('.f');if(g)g.classList.remove('bad');if(i.id=='tos')$('#g-tos').classList.remove('bad')})});
+
+/* submit */
+function bad(g,on){$(g).classList.toggle('bad',on);return on}
+$('#f').addEventListener('submit',function(e){e.preventDefault();
+ var errs=[bad('#g-name',$('#name').value.trim().length<2),bad('#g-email',!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('#email').value.trim())),bad('#g-tel',!/^0\d{8,9}$/.test($('#tel').value.replace(/[\s-]/g,'')))];
+ var own=document.querySelector('input[name=dm]:checked').value=='own';if(own)errs.push(bad('#own',!/^([a-z0-9-]+\.)+[a-z]{2,}$/i.test($('#dom').value.trim())));
+ var pm=document.querySelector('input[name=pm]:checked').value;
+ if(pm=='bank'&&!$('#slip').files.length){errs.push(true);toast('กรุณาแนบสลิปการโอนเงิน')}
+ var tos=!$('#tos').checked;$('#g-tos').classList.toggle('bad',tos);errs.push(tos);
+ if(errs.some(Boolean)){var f=document.querySelector('.bad input, .bad');if(f&&f.focus)f.focus();if(!$('#toast').classList.contains('show'))toast('กรุณาตรวจสอบช่องที่ขึ้นสีแดง');return}
+ var b=$('#pay'),b2=$('#pay2');b.disabled=b2.disabled=true;b.querySelector('span').textContent='กำลังดำเนินการ...';
+ b.disabled=b2.disabled=false;b.querySelector('span').textContent='ชำระเงิน';
+ toast('ยังไม่ได้เชื่อมระบบรับชำระเงินจริง กรุณาตั้งค่า Supabase และ Payment Gateway ก่อนเปิดรับออเดอร์');
+ });
+
+function success(pm){clearInterval(tmr);var c=calc(),no='WR-'+Date.now().toString().slice(-8),email=$('#email').value.trim();
+ var verify=pm=='bank'?'ทีมงานกำลังตรวจสอบสลิป ใช้เวลาไม่เกิน 1 ชั่วโมงในเวลาทำการ':'เราได้รับการชำระเงินแล้ว';
+ $('#mbar').style.display='none';
+ $('#steps').innerHTML='<span class="dn"><i>✓</i><b>เลือกเว็บไซต์</b></span><hr><span class="dn"><i>✓</i><b>ชำระเงิน</b></span><hr><span class="on"><i>3</i><b>เสร็จสิ้น</b></span>';
+ $('#lay').outerHTML='<div class="card ok-card"><div class="big"><i data-lucide="check"></i></div><h1>'+(pm=='bank'?'ส่งข้อมูลการโอนเงินแล้ว':'ชำระเงินสำเร็จ')+'</h1><p>'+verify+'<br>เราส่งอีเมลยืนยันไปที่ <b style="color:var(--t)">'+email.replace(/</g,'&lt;')+'</b></p>'+
+ '<div class="sum"><div><span>เลขที่คำสั่งเช่า</span><b>'+no+'</b></div><div><span>เว็บไซต์</span><b>'+S[0]+'</b></div><div><span>รอบการเช่า</span><b>'+(cy=='m'?'รายเดือน':'รายปี')+'</b></div><div><span>ยอดชำระ</span><b>'+fmt(c.tot)+'</b></div></div>'+
+ '<div class="nx"><div><i data-lucide="mail"></i>ทีมงานจะติดต่อเพื่อรับโลโก้และข้อมูลร้านภายใน 1 วันทำการ</div><div><i data-lucide="rocket"></i>เว็บไซต์พร้อมใช้งานภายใน 24 ชั่วโมง</div></div>'+
+ '<a class="btn pri" href="index.html">กลับหน้าแรก</a></div>';ic();scrollTo(0,0)}
+
+render();startTimer();ic();
+</script>
+</body>
+</html>

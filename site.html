@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>รายละเอียดเว็บไซต์ให้เช่า — Webrent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#2563EB;--s:#60A5FA;--lb:#EFF6FF;--bg:#F8FAFC;--t:#0F172A;--t2:#64748B;--bd:#E2E8F0;--ac:#38BDF8;--ok:#16A34A}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font:400 16px/1.65 'IBM Plex Sans Thai',system-ui,sans-serif;background:var(--bg);color:var(--t);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-weight:600;line-height:1.3;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}button,input{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px;border-radius:8px}
+svg.lucide{width:1.15em;height:1.15em;stroke-width:1.8;flex:none}
+.w{max-width:1160px;margin:0 auto;padding:0 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:12px;font-weight:600;font-size:15px;transition:.2s}
+.btn:active{transform:scale(.97)}.pri{background:var(--p);color:#fff;box-shadow:0 6px 16px -6px rgba(37,99,235,.55)}.pri:hover{background:#1d4fd8;transform:translateY(-1px)}
+.sec{background:#fff;border:1px solid var(--bd)}.sec:hover{background:var(--lb);border-color:var(--s)}
+nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--bd)}
+nav .w{display:flex;align-items:center;height:64px;gap:16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px}.logo b{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--p),var(--ac));color:#fff}
+nav .btn{margin-left:auto;padding:8px 16px;font-size:14px}
+.crumb{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--t2);padding:22px 0 16px}.crumb a:hover{color:var(--p)}.crumb svg{width:14px;height:14px}.crumb b{color:var(--t);font-weight:500}
+
+.lay{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:32px;align-items:start;padding-bottom:72px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:20px;padding:24px}
+.blk{margin-top:44px}.blk>h2{font-size:22px;margin-bottom:16px}
+
+/* title */
+.tt{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ok);background:#DCFCE7;padding:2px 10px;border-radius:99px}.st::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.st.lo{color:#B45309;background:#FEF3C7}.st.lo::before{background:#D97706}
+h1{font-size:clamp(26px,4vw,36px);margin-bottom:8px}.meta{display:flex;gap:16px;flex-wrap:wrap;color:var(--t2);font-size:14.5px;margin-bottom:20px}.meta span{display:inline-flex;gap:6px;align-items:center}.meta svg{color:#F59E0B}
+
+/* preview */
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.tabs,.dev{display:inline-flex;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:3px}
+.tabs button,.dev button{padding:6px 14px;border-radius:9px;font-size:14px;font-weight:500;color:var(--t2);display:inline-flex;gap:6px;align-items:center;transition:.2s}
+.tabs button[aria-pressed=true],.dev button[aria-pressed=true]{background:var(--p);color:#fff}
+.dev{margin-left:auto}
+.pv{background:linear-gradient(135deg,#dbeafe,#e0f2fe);border-radius:22px;padding:22px 16px;display:flex;justify-content:center}
+.stage{width:100%;transition:width .4s cubic-bezier(.4,0,.2,1);background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 24px 50px -22px rgba(37,99,235,.5),0 0 0 1px var(--bd)}
+.stage .ub{display:flex;gap:6px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--bd);background:#fff}.ub i{width:10px;height:10px;border-radius:50%;background:var(--bd)}
+.ub span{margin-left:8px;flex:1;font-size:13px;color:var(--t2);background:var(--bg);border-radius:8px;padding:1px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage iframe{display:block;width:100%;height:520px;border:0;background:#fff}
+.hint{display:flex;gap:8px;align-items:center;color:var(--t2);font-size:13.5px;margin-top:12px}
+
+/* content */
+.desc{color:var(--t2);max-width:68ch}
+.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.ft{display:flex;gap:14px;background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;transition:.25s}.ft:hover{border-color:var(--s);transform:translateY(-2px)}
+.ft .ic{display:grid;place-items:center;width:40px;height:40px;border-radius:11px;background:var(--lb);color:var(--p);flex:none}.ft b{display:block;font-weight:600;font-size:15px}.ft small{color:var(--t2);font-size:14px;line-height:1.5;display:block}
+.inc{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:10px 24px}.inc li{display:flex;gap:10px}.inc svg{color:var(--p);margin-top:5px}
+.sp{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--bd);border-radius:16px;overflow:hidden;font-size:15px}
+.sp td{padding:13px 18px;border-bottom:1px solid var(--bd)}.sp tr:last-child td{border:0}.sp td:first-child{color:var(--t2);width:42%;background:var(--bg)}
+.rv{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.rv .card{padding:18px;font-size:14.5px}.rv .stars{color:#F59E0B;display:flex;margin-bottom:8px}.rv small{color:var(--t2);display:block;margin-top:10px}
+.rel{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rc{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:12px;transition:.25s;display:block}.rc:hover{transform:translateY(-4px);box-shadow:0 18px 30px -20px rgba(15,23,42,.3)}
+.rc i{display:block;height:80px;border-radius:10px;margin-bottom:10px}.rc b{display:block;font-size:15px}.rc small{color:var(--t2)}
+
+/* buy box */
+.buy{position:sticky;top:84px}.buy h2{font-size:18px;margin-bottom:14px}
+.tg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:18px}
+.tg button{padding:8px;border-radius:9px;font-weight:500;font-size:14.5px;color:var(--t2);transition:.2s}.tg button[aria-pressed=true]{background:#fff;color:var(--p);box-shadow:0 1px 4px rgba(15,23,42,.12)}.tg em{font-style:normal;font-size:12px;color:var(--ok);margin-left:4px}
+.amt{font-size:38px;font-weight:700;letter-spacing:-.02em;line-height:1.2}.amt small{font-size:15px;font-weight:400;color:var(--t2)}.sv{font-size:13.5px;color:var(--ok);min-height:22px;margin-bottom:16px}
+.buy ul{list-style:none;display:grid;gap:9px;font-size:14.5px;margin:16px 0 20px;padding-top:16px;border-top:1px solid var(--bd)}.buy li{display:flex;gap:10px}.buy li svg{color:var(--p);margin-top:4px}
+.buy .btn{width:100%;margin-bottom:10px}.safe{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--t2);font-size:13px}
+
+/* modal */
+.md{position:fixed;inset:0;z-index:40;display:none;place-items:center;background:rgba(15,23,42,.4);backdrop-filter:blur(4px);padding:16px}.md.on{display:grid}
+.mb{background:#fff;border-radius:22px;padding:28px;width:100%;max-width:440px;animation:pop .25s ease}@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.97)}}
+.mb h2{font-size:20px;margin-bottom:4px}.mb p{color:var(--t2);font-size:14.5px;margin-bottom:18px}
+.sum{background:var(--bg);border-radius:14px;padding:14px 16px;display:grid;gap:6px;font-size:14.5px;margin-bottom:16px}.sum div{display:flex;justify-content:space-between}.sum div:last-child{border-top:1px solid var(--bd);padding-top:8px;font-weight:600}
+.mb label{font-size:14px;font-weight:500;display:grid;gap:6px;margin-bottom:18px}.mb input{padding:11px 14px;border:1px solid var(--bd);border-radius:12px;outline:0;transition:.2s}.mb input:focus{border-color:var(--s);box-shadow:0 0 0 3px rgba(96,165,250,.2)}
+.mb .row{display:flex;gap:10px}.mb .row .btn{flex:1}
+
+.mbar{display:none}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,40px);opacity:0;background:var(--t);color:#fff;padding:12px 20px;border-radius:12px;display:flex;gap:10px;align-items:center;transition:.35s;z-index:60;pointer-events:none;max-width:calc(100vw - 32px)}.toast.show{transform:translate(-50%,0);opacity:1}
+
+@media(max-width:980px){.lay{grid-template-columns:1fr}.buy{position:static}
+.mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:15;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--bd);padding:12px 20px;gap:14px;align-items:center}
+.mbar div{line-height:1.3}.mbar small{color:var(--t2);font-size:12.5px;display:block}.mbar b{font-size:20px}.mbar .btn{margin-left:auto;padding:11px 22px}
+body{padding-bottom:76px}.rel,.rv{grid-template-columns:1fr}.dev{display:none}}
+@media(max-width:600px){.feat,.inc{grid-template-columns:1fr}.stage iframe{height:460px}.pv{padding:14px 10px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav><div class="w"><a class="logo" href="index.html"><b><i data-lucide="layout-template"></i></b>Webrent</a><a class="btn sec" href="index.html#sites"><i data-lucide="arrow-left"></i>เว็บไซต์ทั้งหมด</a></div></nav>
+
+<main class="w">
+  <div class="crumb"><a href="index.html">หน้าแรก</a><i data-lucide="chevron-right"></i><a href="index.html#sites">เว็บไซต์ให้เช่า</a><i data-lucide="chevron-right"></i><b id="bc"></b></div>
+  <div class="lay">
+    <div>
+      <div class="tt"><span class="st" id="st"></span><span id="cat" style="color:var(--t2);font-size:14.5px"></span></div>
+      <h1 id="nm"></h1>
+      <div class="meta"><span><i data-lucide="star"></i>4.8 (126 รีวิว)</span><span><i data-lucide="users"></i><span id="rn"></span></span><span><i data-lucide="clock"></i>เปิดใช้งานภายใน 24 ชั่วโมง</span></div>
+
+      <div class="bar">
+        <div class="tabs" id="tabs" role="group" aria-label="หน้าตัวอย่าง"></div>
+        <div class="dev" id="dev" role="group" aria-label="ขนาดหน้าจอ">
+          <button data-w="100%" aria-pressed="true" aria-label="เดสก์ท็อป"><i data-lucide="monitor"></i></button>
+          <button data-w="768px" aria-pressed="false" aria-label="แท็บเล็ต"><i data-lucide="tablet"></i></button>
+          <button data-w="380px" aria-pressed="false" aria-label="มือถือ"><i data-lucide="smartphone"></i></button>
+        </div>
+      </div>
+      <div class="pv"><div class="stage" id="stage"><div class="ub"><i></i><i></i><i></i><span id="url"></span></div><iframe id="fr" title="ตัวอย่างเว็บไซต์" sandbox="" loading="lazy"></iframe></div></div>
+      <p class="hint"><i data-lucide="info"></i>นี่คือตัวอย่างหน้าตาเว็บ ลองสลับหน้าและขนาดหน้าจอเพื่อดูการแสดงผลบนอุปกรณ์ต่างๆ</p>
+
+      <section class="blk"><h2>เกี่ยวกับเว็บไซต์นี้</h2><p class="desc" id="ds"></p></section>
+      <section class="blk"><h2>ฟีเจอร์เด่น</h2><div class="feat" id="ftr"></div></section>
+      <section class="blk"><h2>สิ่งที่รวมอยู่ในค่าเช่า</h2><ul class="inc" id="inc"></ul></section>
+      <section class="blk"><h2>ข้อมูลทางเทคนิค</h2><table class="sp" id="sp"></table></section>
+      <section class="blk"><h2>รีวิวจากผู้เช่า</h2><div class="rv" id="rv"></div></section>
+      <section class="blk"><h2>เว็บไซต์ที่คล้ายกัน</h2><div class="rel" id="rel"></div></section>
+    </div>
+
+    <aside class="card buy" id="buy">
+      <h2>เลือกรอบการเช่า</h2>
+      <div class="tg" id="tg"><button data-c="m" aria-pressed="true">รายเดือน</button><button data-c="y" aria-pressed="false">รายปี<em>ลด 2 เดือน</em></button></div>
+      <div class="amt" id="amt"></div><div class="sv" id="sv"></div>
+      <button class="btn pri" data-open><i data-lucide="key-round"></i>เช่าเว็บไซต์นี้</button>
+      <button class="btn sec" data-t="ส่งคำขอทดลองใช้แล้ว ทีมงานจะติดต่อกลับ"><i data-lucide="message-circle"></i>ขอคำปรึกษาก่อนเช่า</button>
+      <ul><li><i data-lucide="check"></i>โดเมนย่อยฟรี เชื่อมโดเมนเองได้</li><li><i data-lucide="check"></i>SSL และสำรองข้อมูลอัตโนมัติ</li><li><i data-lucide="check"></i>แก้ไขเนื้อหาเองผ่านแผงควบคุม</li><li><i data-lucide="check"></i>ยกเลิกได้เมื่อครบรอบบิล</li></ul>
+      <div class="safe"><i data-lucide="shield-check"></i>ชำระเงินปลอดภัย มีใบกำกับภาษี</div>
+    </aside>
+  </div>
+</main>
+
+<div class="mbar"><div><small id="mp">รายเดือน</small><b id="mb"></b></div><button class="btn pri" data-open>เช่าเว็บไซต์นี้</button></div>
+
+<div class="md" id="md" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="mb">
+  <h2 id="mt">ยืนยันการเช่า</h2><p>ตรวจสอบรายการและระบุโดเมนที่ต้องการใช้</p>
+  <div class="sum"><div><span>เว็บไซต์</span><b id="m1"></b></div><div><span>รอบการเช่า</span><b id="m2"></b></div><div><span>ยอดชำระ</span><b id="m3"></b></div></div>
+  <label>โดเมนที่ต้องการ (เว้นว่างได้ ตั้งค่าภายหลัง)<input id="dm" placeholder="เช่น myshop.com" autocomplete="off"></label>
+  <div class="row"><button class="btn sec" data-close>ยกเลิก</button><button class="btn pri" id="go">ไปชำระเงิน</button></div>
+</div></div>
+<div class="toast" id="toast" role="status"><i data-lucide="check-circle-2"></i><span></span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<script>
+/* ข้อมูลตัวอย่าง — ต่อ Supabase ตาราง sites แล้วอ่านด้วย ?id= ได้ */
+var SITES=[
+ {n:'Shoply Store',c:'ร้านค้าออนไลน์',m:990,y:9900,a:'#2563EB',b:'#38BDF8',s:1,r:64,h:'สินค้าคุณภาพ ส่งถึงบ้านคุณ',sub:'คอลเลกชันใหม่ ลดสูงสุด 30%',cta:'เลือกซื้อเลย',it:[['เสื้อยืดคอตตอน','฿390'],['กระเป๋าผ้า','฿290'],['หมวกแก๊ป','฿250'],['ผ้าพันคอ','฿450']],d:'เว็บร้านค้าออนไลน์ครบวงจร มีหน้าสินค้า ตะกร้า และชำระเงินผ่าน PromptPay หรือบัตร แจ้งออเดอร์เข้า LINE ทันที เหมาะกับร้านที่ขายสินค้าหลายรายการ',f:[['shopping-cart','ตะกร้าและชำระเงิน','รองรับ PromptPay และบัตรเครดิต'],['package','จัดการสินค้าและสต็อก','เพิ่มสินค้า ตั้งราคา ติดตามจำนวนคงเหลือ'],['bell-ring','แจ้งออเดอร์เข้า LINE','รู้ทันทีเมื่อมีลูกค้าสั่งซื้อ'],['bar-chart-3','รายงานยอดขาย','สรุปรายวันและรายเดือน']]},
+ {n:'Corpo Prime',c:'เว็บไซต์บริษัท',m:590,y:5900,a:'#1E3A8A',b:'#60A5FA',s:1,r:48,h:'พาร์ทเนอร์ที่ธุรกิจไว้วางใจ',sub:'ให้คำปรึกษาและบริการครบวงจรมากกว่า 10 ปี',cta:'ขอใบเสนอราคา',it:[['ที่ปรึกษาธุรกิจ','บริการ'],['พัฒนาระบบ','บริการ'],['การตลาดดิจิทัล','บริการ'],['ฝึกอบรม','บริการ']],d:'เว็บไซต์องค์กรดูน่าเชื่อถือ แนะนำบริษัท บริการ ผลงาน และทีมงาน พร้อมฟอร์มติดต่อและแผนที่ เหมาะกับบริษัทที่ต้องการภาพลักษณ์มืออาชีพ',f:[['building-2','หน้าบริษัทและทีมงาน','เล่าเรื่องแบรนด์อย่างเป็นทางการ'],['file-text','บทความและข่าว','ดันอันดับ SEO ด้วยเนื้อหาของคุณ'],['mail','ฟอร์มติดต่อ','ส่งเข้าอีเมลธุรกิจทันที'],['map-pin','แผนที่สาขา','เชื่อม Google Maps']]},
+ {n:'Folio Studio',c:'เว็บไซต์ Portfolio',m:390,y:3900,a:'#0EA5E9',b:'#BAE6FD',s:1,r:36,h:'ผลงานที่พูดแทนตัวคุณ',sub:'นักออกแบบและช่างภาพอิสระ',cta:'ดูผลงาน',it:[['แบรนด์ดิ้ง','งานออกแบบ'],['ภาพแต่งงาน','ถ่ายภาพ'],['แพ็กเกจจิ้ง','งานออกแบบ'],['ภาพสินค้า','ถ่ายภาพ']],d:'เว็บ Portfolio แกลเลอรีภาพคมชัด โหลดเร็ว เหมาะกับนักออกแบบ ช่างภาพ และฟรีแลนซ์ที่ต้องการโชว์ผลงานและรับงานผ่านเว็บ',f:[['image','แกลเลอรีภาพความละเอียดสูง','โหลดแบบ lazy ไม่หน่วง'],['layout-grid','จัดกลุ่มผลงาน','แยกตามหมวดและโปรเจกต์'],['send','ฟอร์มรับงาน','ลูกค้าส่งบรีฟได้ทันที'],['smartphone','รองรับมือถือ','ดูสวยทุกขนาดหน้าจอ']]},
+ {n:'Learnly Course',c:'เว็บไซต์คอร์สออนไลน์',m:1290,y:12900,a:'#3B82F6',b:'#93C5FD',s:0,r:29,h:'เรียนรู้ได้ทุกที่ ทุกเวลา',sub:'คอร์สออนไลน์จากผู้เชี่ยวชาญตัวจริง',cta:'เริ่มเรียน',it:[['การตลาดออนไลน์','12 บทเรียน'],['ถ่ายภาพมือถือ','8 บทเรียน'],['Excel เบื้องต้น','10 บทเรียน'],['พูดต่อหน้าสาธารณะ','6 บทเรียน']],d:'ขายคอร์สวิดีโอและจัดการนักเรียนในที่เดียว มีระบบสมัครเรียน ติดตามความคืบหน้า และออกใบรับรองอัตโนมัติ',f:[['play-circle','เล่นวิดีโอบทเรียน','ล็อกเฉพาะผู้ซื้อคอร์ส'],['users','จัดการนักเรียน','ดูความคืบหน้ารายบุคคล'],['award','ใบรับรองอัตโนมัติ','ออกให้เมื่อเรียนจบ'],['credit-card','รับชำระเงิน','รองรับ PromptPay และบัตร']]},
+ {n:'Servo Booking',c:'เว็บไซต์ธุรกิจบริการ',m:690,y:6900,a:'#2563EB',b:'#7DD3FC',s:1,r:41,h:'จองคิวง่าย ไม่ต้องรอ',sub:'ดูบริการและเลือกเวลาที่สะดวกได้ตลอด 24 ชม.',cta:'จองคิว',it:[['ทรีตเมนต์หน้าใส','฿1,200'],['นวดผ่อนคลาย','฿800'],['ทำเล็บเจล','฿500'],['สระ-ไดร์','฿300']],d:'เว็บสำหรับร้านบริการที่ต้องรับนัดหมาย แสดงบริการและราคา ให้ลูกค้าเลือกเวลาว่างและจองคิวเองได้ ลดภาระรับสายและแชต',f:[['calendar-check','ระบบจองคิวออนไลน์','เลือกวันและเวลาว่างได้เอง'],['list','รายการบริการและราคา','แก้ไขได้ตลอด'],['bell','แจ้งเตือนนัดหมาย','ส่งให้ทั้งร้านและลูกค้า'],['star','รีวิวจากลูกค้า','สร้างความน่าเชื่อถือ']]},
+ {n:'Launch One',c:'เว็บไซต์ Landing Page',m:299,y:2990,a:'#38BDF8',b:'#E0F2FE',s:1,r:57,h:'เปิดตัวสินค้าใหม่ให้ปัง',sub:'หน้าเดียวเน้นปิดการขาย โหลดไวพร้อมวัดผลโฆษณา',cta:'ลงทะเบียนวันนี้',it:[['ประโยชน์ข้อที่ 1','คำอธิบายสั้น'],['ประโยชน์ข้อที่ 2','คำอธิบายสั้น'],['ประโยชน์ข้อที่ 3','คำอธิบายสั้น']],d:'Landing Page หน้าเดียวออกแบบมาเพื่อปิดการขายและเก็บรายชื่อลูกค้า โหลดเร็ว รองรับ Facebook Pixel และ Google Analytics',f:[['zap','โหลดเร็วมาก','เหมาะกับการยิงแอด'],['target','ติดตามผลโฆษณา','เชื่อม Pixel และ Analytics'],['user-plus','ฟอร์มเก็บรายชื่อ','ส่งเข้าอีเมลหรือ Google Sheets'],['timer','ตัวนับเวลาโปรโมชัน','กระตุ้นการตัดสินใจ']]}];
+var INC=['โฮสติ้งความเร็วสูง','โดเมนย่อยฟรี (เชื่อมโดเมนเองได้)','ใบรับรอง SSL','สำรองข้อมูลทุกวัน','แผงควบคุมแก้ไขเนื้อหา','อัปเดตระบบและความปลอดภัย','ซัพพอร์ตผ่าน LINE และอีเมล','รองรับทุกอุปกรณ์'];
+var SPEC=[['ระยะเวลาเปิดใช้งาน','ภายใน 24 ชั่วโมงหลังชำระเงิน'],['โดเมน','โดเมนย่อยฟรี หรือเชื่อมโดเมนของคุณเอง'],['ความเร็วโหลดหน้าแรก','น้อยกว่า 2 วินาที'],['ภาษา','ไทย / อังกฤษ'],['การปรับแต่ง','สี โลโก้ ข้อความ รูปภาพ เมนู'],['ระยะสัญญาขั้นต่ำ','1 เดือน (รายเดือน) / 12 เดือน (รายปี)']];
+var REV=[['เปิดร้านได้ในวันเดียว แก้ข้อความเองได้สะดวกมาก','คุณมาลี · ร้านขนมออนไลน์'],['ทีมงานช่วยเชื่อมโดเมนให้ ไม่ต้องยุ่งยากเลย','คุณสมศักดิ์ · ที่ปรึกษา'],['โหลดไว ลูกค้าชมว่าเว็บดูน่าเชื่อถือ','คุณพิมพ์ใจ · ช่างภาพ']];
+var $=function(s){return document.querySelector(s)},fmt=function(n){return n.toLocaleString('th-TH')},ic=function(){window.lucide&&lucide.createIcons()};
+var id=parseInt(new URLSearchParams(location.search).get('id'),10);if(!(id>=0&&id<SITES.length))id=0;
+var S=SITES[id],cy='m',pg=0,PAGES=['หน้าแรก','รายการ','ติดต่อ'];
+var tt;function toast(m){var t=$('#toast');t.querySelector('span').textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(function(){t.classList.remove('show')},2600)}
+
+/* demo site rendered inside the iframe */
+function demo(s,p){var card=function(i){return '<div class="c"><div class="im"></div><b>'+i[0]+'</b><span>'+i[1]+'</span></div>'};
+ var one=s.it.map(card).join(''),all=s.it.concat(s.it).slice(0,6).map(card).join('');
+ var main=p==0?'<section class="hero"><h2>'+s.h+'</h2><p>'+s.sub+'</p><a>'+s.cta+'</a></section><h3>รายการแนะนำ</h3><div class="g">'+one+'</div>':p==1?'<h3>ทั้งหมด</h3><div class="g">'+all+'</div>':'<h3>ติดต่อเรา</h3><div class="f"><input placeholder="ชื่อ"><input placeholder="อีเมลหรือเบอร์โทร"><textarea placeholder="ข้อความ"></textarea><a>ส่งข้อความ</a></div>';
+ return '<!DOCTYPE html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box;margin:0}body{font:15px/1.6 system-ui,"Noto Sans Thai",sans-serif;color:#0f172a;background:#fff}header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid #e2e8f0}header b{font-size:17px;color:'+s.a+'}nav{display:flex;gap:18px;font-size:14px;color:#64748b}main{padding:24px}.hero{border-radius:16px;padding:44px 28px;color:#fff;background:linear-gradient(120deg,'+s.a+','+s.b+');margin-bottom:26px}.hero h2{font-size:clamp(22px,4vw,32px);line-height:1.25;margin-bottom:8px}.hero p{opacity:.92;margin-bottom:18px}a{display:inline-block;background:#fff;color:'+s.a+';font-weight:600;padding:9px 20px;border-radius:10px;font-size:14px}.f a{background:'+s.a+';color:#fff;justify-self:start}h3{margin-bottom:14px;font-size:18px}.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}.c{border:1px solid #e2e8f0;border-radius:14px;padding:10px}.im{height:92px;border-radius:9px;margin-bottom:10px;background:linear-gradient(135deg,'+s.b+'66,'+s.a+'22)}.c b{display:block;font-size:14px}.c span{color:#64748b;font-size:13px}.f{display:grid;gap:12px;max-width:440px}input,textarea{font:inherit;padding:11px 14px;border:1px solid #e2e8f0;border-radius:10px}textarea{height:100px}footer{padding:18px 24px;border-top:1px solid #e2e8f0;color:#94a3b8;font-size:13px}@media(max-width:520px){header{padding:12px 16px}nav{gap:10px;font-size:13px}main{padding:16px}.hero{padding:30px 20px}}</style><header><b>'+s.n+'</b><nav><span>หน้าแรก</span><span>รายการ</span><span>ติดต่อ</span></nav></header><main>'+main+'</main><footer>© ตัวอย่างเว็บไซต์ '+s.n+'</footer>'}
+function showDemo(){$('#fr').srcdoc=demo(S,pg);$('#tabs').querySelectorAll('button').forEach(function(b,i){b.setAttribute('aria-pressed',i==pg)})}
+
+/* price */
+function price(){var p=cy=='m'?S.m:S.y;$('#amt').innerHTML='฿'+fmt(p)+' <small>/'+(cy=='m'?'เดือน':'ปี')+'</small>';
+ $('#sv').textContent=cy=='y'?'ประหยัด ฿'+fmt(S.m*12-S.y)+' เมื่อเทียบกับรายเดือน':'';
+ $('#mb').textContent='฿'+fmt(p);$('#mp').textContent='ราคา/'+(cy=='m'?'เดือน':'ปี');
+ $('#tg').querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.c==cy)})}
+
+/* render */
+document.title=S.n+' — เช่าเว็บไซต์ | Webrent';
+$('#bc').textContent=S.n;$('#nm').textContent=S.n;$('#cat').textContent=S.c;$('#ds').textContent=S.d;$('#rn').textContent='ผู้เช่าอยู่ '+S.r+' ราย';
+$('#st').textContent=S.s?'พร้อมเช่า':'เหลือ 2 ที่';$('#st').className='st'+(S.s?'':' lo');
+$('#url').textContent='www.'+S.n.toLowerCase().replace(/\s/g,'')+'.com';
+$('#tabs').innerHTML=PAGES.map(function(p,i){return '<button data-p="'+i+'" aria-pressed="'+(i==0)+'">'+p+'</button>'}).join('');
+$('#ftr').innerHTML=S.f.map(function(f){return '<div class="ft"><span class="ic"><i data-lucide="'+f[0]+'"></i></span><div><b>'+f[1]+'</b><small>'+f[2]+'</small></div></div>'}).join('');
+$('#inc').innerHTML=INC.map(function(i){return '<li><i data-lucide="check"></i>'+i+'</li>'}).join('');
+$('#sp').innerHTML=SPEC.map(function(r){return '<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'}).join('');
+$('#rv').innerHTML=REV.map(function(r){return '<div class="card"><div class="stars">'+'<i data-lucide="star" style="fill:#F59E0B"></i>'.repeat(5)+'</div>'+r[0]+'<small>'+r[1]+'</small></div>'}).join('');
+$('#rel').innerHTML=SITES.map(function(s,i){return i==id?'':'<a class="rc" href="?id='+i+'"><i style="background:linear-gradient(120deg,'+s.a+','+s.b+')"></i><b>'+s.n+'</b><small>'+s.c+' · ฿'+fmt(s.m)+'/เดือน</small></a>'}).filter(Boolean).slice(0,3).join('');
+price();showDemo();ic();
+
+/* events */
+document.addEventListener('click',function(e){var t=e.target.closest('button');if(!t)return;
+ if(t.dataset.t)toast(t.dataset.t);
+ if(t.dataset.p){pg=+t.dataset.p;showDemo()}
+ if(t.dataset.w){$('#stage').style.width=t.dataset.w;$('#dev').querySelectorAll('button').forEach(function(b){b.setAttribute('aria-pressed',b===t)})}
+ if(t.dataset.c){cy=t.dataset.c;price()}
+ if(t.hasAttribute('data-open')){var p=cy=='m'?S.m:S.y;$('#m1').textContent=S.n;$('#m2').textContent=cy=='m'?'รายเดือน':'รายปี';$('#m3').textContent='฿'+fmt(p);$('#md').classList.add('on');$('#dm').focus()}
+ if(t.hasAttribute('data-close'))$('#md').classList.remove('on');
+ if(t.id=='go'){location.href='checkout.html?id='+id+'&c='+cy}});
+$('#md').addEventListener('click',function(e){if(e.target===this)this.classList.remove('on')});
+document.addEventListener('keydown',function(e){if(e.key=='Escape')$('#md').classList.remove('on')});
+</script>
+</body>
+</html>
