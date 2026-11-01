@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>รายการออเดอร์ — Webrent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#2563eb;--lb:#eff6ff;--bg:#f8fafc;--t:#0f172a;--t2:#64748b;--bd:#e2e8f0;--ok:#15803d;--wn:#b45309;--er:#b91c1c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px/1.6 'IBM Plex Sans Thai',system-ui,sans-serif}a{color:inherit;text-decoration:none}
+header{background:#fff;border-bottom:1px solid var(--bd)}.nav{max-width:1100px;height:68px;margin:auto;padding:0 22px;display:flex;align-items:center;gap:12px}.logo{font-weight:700;font-size:19px;margin-right:auto}.logo b{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#2563eb,#38bdf8);color:#fff;margin-right:8px}
+.nav a:not(.logo),.nav button{padding:8px 12px;border-radius:9px;color:var(--t2);font:inherit}.nav a.active{color:var(--p);background:var(--lb);font-weight:600}.nav button{border:1px solid var(--bd);background:#fff;cursor:pointer}
+main{max-width:1056px;margin:44px auto;padding:0 22px}.heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}.heading h1{font-size:30px;line-height:1.25;margin:0}.heading p{margin:5px 0 0;color:var(--t2)}.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--p);color:#fff;padding:10px 16px;border-radius:11px;font-weight:600}
+.panel{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:20px;overflow:hidden}.status{display:inline-flex;border-radius:99px;padding:3px 10px;font-size:13px;font-weight:600;background:var(--lb);color:var(--p)}.status.active{background:#dcfce7;color:var(--ok)}.status.pending{background:#fef3c7;color:var(--wn)}.status.ended{background:#fee2e2;color:var(--er)}
+.order{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;align-items:center;gap:14px;padding:16px 4px;border-bottom:1px solid var(--bd)}.order:last-child{border-bottom:0}.order b{display:block}.order small{color:var(--t2)}.price{text-align:right;font-weight:700}.empty,.notice{text-align:center;padding:48px 18px;color:var(--t2)}.notice{color:#b45309;background:#fffbeb;border-radius:12px;padding:16px}
+@media(max-width:700px){.nav{padding:0 14px;gap:2px}.nav a:not(.logo),.nav button{padding:7px;font-size:13px}main{margin:28px auto;padding:0 14px}.heading{align-items:start;flex-direction:column}.order{grid-template-columns:1fr 1fr;gap:8px}.price{text-align:left}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<header><nav class="nav"><a class="logo" href="index.html"><b>W</b>Webrent</a><a href="orders.html" class="active">ออเดอร์</a><a href="profile.html">โปรไฟล์</a><button id="logout">ออกจากระบบ</button></nav></header>
+<main><div class="heading"><div><h1>รายการออเดอร์</h1><p>ติดตามสถานะการเช่าเว็บไซต์ของคุณ</p></div><a class="btn" href="index.html#sites">เลือกเว็บไซต์</a></div>
+<div class="panel"><div id="state" class="empty">กำลังโหลดรายการออเดอร์…</div><div id="list"></div></div></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script>
+<script>
+(async function(){
+  var $=function(id){return document.getElementById(id)},cfg=window.WEBRENT_SUPABASE;
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function money(v){return '฿'+Number(v||0).toLocaleString('th-TH',{maximumFractionDigits:2})}
+  function date(v){return v?new Date(v).toLocaleDateString('th-TH',{year:'numeric',month:'short',day:'numeric'}):'—'}
+  var labels={pending_payment:['รอชำระเงิน','pending'],pending_review:['รอตรวจสอบ','pending'],active:['ใช้งานอยู่','active'],rejected:['ไม่อนุมัติ','ended'],cancelled:['ยกเลิก','ended'],expired:['หมดอายุ','ended'],suspended:['พักใช้งาน','ended']};
+  if(!window.supabase||!cfg){$('state').textContent='ยังไม่ได้ตั้งค่า Supabase';return}
+  var sb=window.supabase.createClient(cfg.url,cfg.anonKey),auth=await sb.auth.getSession(),session=auth.data&&auth.data.session;
+  if(!session){location.replace('auth.html?next=orders.html');return}
+  $('logout').onclick=async function(){await sb.auth.signOut();location.replace('auth.html')};
+  var result=await sb.from('rental_orders').select('id,order_number,customer_name,billing_cycle,total_amount,status,created_at,expires_at,websites(name,category)').eq('user_id',session.user.id).order('created_at',{ascending:false});
+  if(result.error){$('state').textContent='โหลดออเดอร์ไม่สำเร็จ: '+result.error.message;return}
+  $('state').hidden=true;
+  if(!result.data.length){$('state').hidden=false;$('state').innerHTML='ยังไม่มีออเดอร์<br><br><a class="btn" href="index.html#sites">เลือกเว็บไซต์ที่ต้องการเช่า</a>';return}
+  $('list').innerHTML=result.data.map(function(o){var st=labels[o.status]||['ไม่ทราบสถานะ','pending'],site=o.websites||{};return '<article class="order"><div><b>'+esc(site.name||'เว็บไซต์')+'</b><small>เลขที่ '+esc(o.order_number)+' · สร้าง '+date(o.created_at)+'</small></div><div><span class="status '+st[1]+'">'+st[0]+'</span></div><div><small>'+(o.billing_cycle==='yearly'?'รายปี':'รายเดือน')+' · หมดอายุ '+date(o.expires_at)+'</small></div><div class="price">'+money(o.total_amount)+'</div></article>'}).join('');
+})();
+</script>
+</body>
+</html>

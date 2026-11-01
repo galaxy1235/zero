@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>โปรไฟล์ — Webrent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--p:#2563eb;--lb:#eff6ff;--bg:#f8fafc;--t:#0f172a;--t2:#64748b;--bd:#e2e8f0}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:16px/1.6 'IBM Plex Sans Thai',system-ui,sans-serif}a{color:inherit;text-decoration:none}
+header{background:#fff;border-bottom:1px solid var(--bd)}.nav{max-width:1100px;height:68px;margin:auto;padding:0 22px;display:flex;align-items:center;gap:12px}.logo{font-weight:700;font-size:19px;margin-right:auto}.logo b{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#2563eb,#38bdf8);color:#fff;margin-right:8px}
+.nav a:not(.logo),.nav button{padding:8px 12px;border-radius:9px;color:var(--t2);font:inherit}.nav a.active{color:var(--p);background:var(--lb);font-weight:600}.nav button{border:1px solid var(--bd);background:#fff;cursor:pointer}
+main{max-width:960px;margin:44px auto;padding:0 22px}.heading{margin-bottom:22px}.heading h1{font-size:30px;line-height:1.25;margin:0}.heading p{margin:5px 0 0;color:var(--t2)}
+.card{background:#fff;border:1px solid var(--bd);border-radius:18px;padding:28px;max-width:660px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:grid;gap:6px}.field.full{grid-column:1/-1}.field label{font-weight:600;font-size:14px}.field input{width:100%;border:1px solid var(--bd);border-radius:11px;padding:12px 13px;font:inherit;color:var(--t);outline:none}.field input:focus{border-color:#60a5fa;box-shadow:0 0 0 3px #60a5fa30}.field input[readonly]{background:var(--bg);color:var(--t2)}
+.actions{display:flex;gap:10px;align-items:center;margin-top:22px}.btn{border:0;display:inline-flex;align-items:center;justify-content:center;background:var(--p);color:white;padding:11px 18px;border-radius:11px;font:600 15px 'IBM Plex Sans Thai',system-ui,sans-serif;cursor:pointer}.btn.alt{background:white;border:1px solid var(--bd);color:var(--t)}.msg{margin:16px 0 0;color:var(--t2);min-height:24px}.msg.error{color:#b91c1c}.msg.ok{color:#15803d}
+@media(max-width:600px){.nav{padding:0 14px;gap:2px}.nav a:not(.logo),.nav button{padding:7px;font-size:13px}main{margin:28px auto;padding:0 14px}.card{padding:20px}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header><nav class="nav"><a class="logo" href="index.html"><b>W</b>Webrent</a><a href="orders.html">ออเดอร์</a><a href="profile.html" class="active">โปรไฟล์</a><button id="logout">ออกจากระบบ</button></nav></header>
+<main><div class="heading"><h1>โปรไฟล์ของฉัน</h1><p>ข้อมูลนี้ใช้สำหรับติดต่อและจัดการคำสั่งเช่าของคุณ</p></div>
+<form class="card" id="profileForm"><div class="grid">
+  <div class="field full"><label for="email">อีเมลบัญชี</label><input id="email" type="email" readonly></div>
+  <div class="field full"><label for="fullName">ชื่อที่ใช้แสดง</label><input id="fullName" maxlength="120" required placeholder="ชื่อของคุณ"></div>
+  <div class="field"><label for="phone">เบอร์โทรศัพท์</label><input id="phone" type="tel" maxlength="32" placeholder="08x-xxx-xxxx"></div>
+  <div class="field"><label for="company">ชื่อธุรกิจ (ถ้ามี)</label><input id="company" maxlength="160" placeholder="ชื่อร้านหรือบริษัท"></div>
+</div><div class="actions"><button class="btn" id="save" type="submit">บันทึกข้อมูล</button><a class="btn alt" href="orders.html">ดูออเดอร์</a></div><p class="msg" id="msg" role="status" aria-live="polite"></p></form></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script>
+<script>
+(async function(){
+  var $=function(id){return document.getElementById(id)},cfg=window.WEBRENT_SUPABASE;
+  if(!window.supabase||!cfg){$('msg').textContent='ยังไม่ได้ตั้งค่า Supabase';$('msg').className='msg error';return}
+  var sb=window.supabase.createClient(cfg.url,cfg.anonKey),auth=await sb.auth.getSession(),session=auth.data&&auth.data.session;
+  if(!session){location.replace('auth.html?next=profile.html');return}
+  $('email').value=session.user.email||'';
+  $('logout').onclick=async function(){await sb.auth.signOut();location.replace('auth.html')};
+  var result=await sb.from('profiles').select('full_name,phone,company_name').eq('id',session.user.id).maybeSingle();
+  if(result.error){$('msg').textContent='โหลดโปรไฟล์ไม่สำเร็จ: '+result.error.message;$('msg').className='msg error';return}
+  if(result.data){$('fullName').value=result.data.full_name||'';$('phone').value=result.data.phone||'';$('company').value=result.data.company_name||''}
+  $('profileForm').addEventListener('submit',async function(e){e.preventDefault();var b=$('save');b.disabled=true;b.textContent='กำลังบันทึก…';$('msg').textContent='';$('msg').className='msg';
+    var update=await sb.from('profiles').update({full_name:$('fullName').value.trim(),phone:$('phone').value.trim()||null,company_name:$('company').value.trim()||null,updated_at:new Date().toISOString()}).eq('id',session.user.id);
+    b.disabled=false;b.textContent='บันทึกข้อมูล';if(update.error){$('msg').textContent='บันทึกไม่สำเร็จ: '+update.error.message;$('msg').className='msg error'}else{$('msg').textContent='บันทึกโปรไฟล์แล้ว';$('msg').className='msg ok'}
+  });
+})();
+</script>
+</body>
+</html>
