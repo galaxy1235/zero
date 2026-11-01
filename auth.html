@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--p:#2563EB;--s:#60A5FA;--lb:#EFF6FF;--bg:#F8FAFC;--t:#0F172A;--t2:#64748B;--bd:#E2E8F0;--er:#DC2626}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font:400 16px/1.6 'IBM Plex Sans Thai',system-ui,sans-serif;color:var(--t);background:radial-gradient(ellipse at 12% 4%,#dbeafe 0,transparent 38%),radial-gradient(ellipse at 95% 95%,#e0f2fe 0,transparent 38%),var(--bg)}
+*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0;min-height:100vh;font:400 16px/1.6 'IBM Plex Sans Thai',system-ui,sans-serif;color:var(--t);background:radial-gradient(ellipse at 12% 4%,#dbeafe 0,transparent 38%),radial-gradient(ellipse at 95% 95%,#e0f2fe 0,transparent 38%),var(--bg)}
 a{color:inherit;text-decoration:none}button,input{font:inherit}button{cursor:pointer}
 .nav{height:72px;display:flex;align-items:center;justify-content:space-between;max-width:1120px;padding:0 22px;margin:auto}
 .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px}.logo b{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--p),#38BDF8);color:white}
@@ -80,7 +80,17 @@ h1{font-size:28px;line-height:1.3;margin:16px 0 6px} .sub{margin:0 0 24px;color:
   $('google').addEventListener('click',async function(){try{var sb=client();$('google').classList.add('busy');var r=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:returnUrl('?next='+encodeURIComponent(next))}});if(r.error)throw r.error}catch(err){message(err.message||'ไม่สามารถเริ่มเข้าสู่ระบบด้วย Google ได้','error');$('google').classList.remove('busy')}});
   $('forgot').addEventListener('click',async function(e){e.preventDefault();try{var email=$('email').value.trim();if(email.toLowerCase()==='olafshop')email=adminEmail;if(!email)throw new Error('กรอกอีเมลก่อน แล้วกดลืมรหัสผ่านอีกครั้ง');var sb=client(),r=await sb.auth.resetPasswordForEmail(email,{redirectTo:returnUrl('?mode=recovery')});if(r.error)throw r.error;message('ส่งลิงก์ตั้งรหัสผ่านใหม่แล้ว กรุณาตรวจสอบอีเมล','ok')}catch(err){message(err.message,'error')}});
   setMode(mode);
-  if(mode!=='recovery')try{client().auth.getSession().then(function(r){if(r.data.session)destination(r.data.session.user)})}catch(err){message(err.message,'error')}
+  if(mode!=='recovery'){
+    var params=new URLSearchParams(location.search),hashParams=new URLSearchParams(location.hash.replace(/^#/,''));
+    var callbackError=params.get('error_description')||params.get('error')||hashParams.get('error_description')||hashParams.get('error');
+    if(callbackError)message('เข้าสู่ระบบไม่สำเร็จ: '+callbackError.replace(/\+/g,' '),'error');
+    try{
+      var authClient=client(),redirecting=false,hasOAuthCallback=params.has('code')||hashParams.has('access_token');
+      function acceptSession(session){if(session&&!redirecting){redirecting=true;destination(session.user)}}
+      authClient.auth.onAuthStateChange(function(event,session){if(event==='SIGNED_IN'||event==='INITIAL_SESSION')acceptSession(session)});
+      authClient.auth.getSession().then(function(result){if(result.data&&result.data.session)acceptSession(result.data.session);else if(hasOAuthCallback&&!callbackError)setTimeout(function(){if(!redirecting)message('Google กลับมาที่เว็บแล้ว แต่ยังไม่ได้รับ session ตรวจสอบ Site URL และ Redirect URLs ใน Supabase แล้วลองใหม่','error')},1800)}).catch(function(err){message(err.message||'ตรวจสอบ session ไม่สำเร็จ','error')});
+    }catch(err){message(err.message,'error')}
+  }
 })();
 </script>
 </body>
