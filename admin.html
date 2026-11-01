@@ -242,12 +242,14 @@ ic();
 </script>
 <script>
 (async function(){
-  var cfg=window.WEBRENT_SUPABASE,adminEmail='ssonx08@gmail.com';
+  var cfg=window.WEBRENT_SUPABASE;
   if(!window.supabase||!cfg||!cfg.url||cfg.url.indexOf('YOUR-PROJECT')>-1||!cfg.anonKey||cfg.anonKey.indexOf('YOUR_')===0){location.replace('auth.html?next=admin.html');return}
   try{
     var client=window.supabase.createClient(cfg.url,cfg.anonKey);
     var result=await client.auth.getSession(),session=result.data&&result.data.session;
-    if(!session||!session.user.email||session.user.email.toLowerCase()!==adminEmail){await client.auth.signOut();location.replace('auth.html?next=admin.html');return}
+    if(!session){location.replace('auth.html?next=admin.html');return}
+    var role=await client.rpc('is_admin');
+    if(role.error||role.data!==true){location.replace('profile.html');return}
     document.body.classList.add('auth-ok');
     document.getElementById('logout').addEventListener('click',async function(){await client.auth.signOut();location.replace('auth.html')});
   }catch(e){location.replace('auth.html?next=admin.html')}

@@ -114,7 +114,7 @@ input:focus{border-color:var(--s);box-shadow:0 0 0 3px rgba(96,165,250,.22)}
         <label class="f sub" id="own" style="margin-top:12px">ชื่อโดเมนของคุณ<input type="text" id="dom" placeholder="เช่น myshop.com" autocomplete="off"><span class="err">กรุณากรอกโดเมน เช่น myshop.com</span></label>
       </section>
 
-      <section class="card"><h2><i>3</i>ช่องทางชำระเงิน</h2>
+      <section class="card"><h2><i>3</i>ช่องทางชำระเงิน</h2><p style="color:#b45309;background:#fffbeb;border-radius:10px;padding:10px 12px;margin:0 0 12px">ขณะนี้ระบบบันทึกออเดอร์เป็นสถานะรอชำระเงินเท่านั้น ยังไม่มีการตัดเงินจริงหรือจัดเก็บสลิป</p>
         <div class="opt" id="pm">
           <label class="o"><input type="radio" name="pm" value="qr" checked><span class="ic"><i data-lucide="qr-code"></i></span><span><b>PromptPay QR</b><small>สแกนจ่ายผ่านแอปธนาคาร ยืนยันอัตโนมัติ</small></span><span class="tag">แนะนำ</span></label>
           <label class="o"><input type="radio" name="pm" value="bank"><span class="ic"><i data-lucide="landmark"></i></span><span><b>โอนผ่านธนาคาร</b><small>โอนแล้วแนบสลิป ทีมงานตรวจสอบภายใน 1 ชั่วโมง (เวลาทำการ)</small></span></label>
@@ -123,7 +123,7 @@ input:focus{border-color:var(--s);box-shadow:0 0 0 3px rgba(96,165,250,.22)}
 
         <div class="pay on" id="p-qr"><div class="qrw"><div class="qr" id="qr"></div><div class="tx">ยอดที่ต้องชำระ<b id="qa"></b>สแกนด้วยแอปธนาคารใดก็ได้<br>QR หมดอายุใน <span class="tm" id="tm">15:00</span><br><button type="button" class="cp" id="rq"><i data-lucide="refresh-cw"></i>สร้าง QR ใหม่</button></div></div></div>
         <div class="pay" id="p-bank"><div class="acct"><div><span>ธนาคาร</span><b>กสิกรไทย</b></div><div><span>ชื่อบัญชี</span><b>บจก. เว็บเร้นท์ (ตัวอย่าง)</b></div><div><span>เลขที่บัญชี</span><b><span id="an" style="color:var(--t)">000-0-00000-0</span><button type="button" class="cp" id="cpy"><i data-lucide="copy"></i>คัดลอก</button></b></div></div>
-          <label class="up"><i data-lucide="upload"></i><span id="sf">แนบสลิปการโอนเงิน (JPG, PNG)</span><input type="file" id="slip" accept="image/*"></label></div>
+          <label class="up"><i data-lucide="upload"></i><span id="sf">แนบสลิป (ยังไม่บันทึกเข้าระบบ)</span><input type="file" id="slip" accept="image/*" disabled></label></div>
         <div class="pay" id="p-card"><div class="note"><i data-lucide="shield-check"></i><span>เมื่อกดชำระเงิน ระบบจะพาไปหน้าชำระเงินของผู้ให้บริการ (เช่น Omise หรือ Stripe) เพื่อกรอกข้อมูลบัตร เราไม่เก็บเลขบัตรของคุณ</span></div></div>
       </section>
 
@@ -148,10 +148,13 @@ input:focus{border-color:var(--s);box-shadow:0 0 0 3px rgba(96,165,250,.22)}
 <div class="toast" id="toast" role="status"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script>
 /* ตัวอย่าง — จริงต้องสร้างออเดอร์ที่เซิร์ฟเวอร์ (Supabase Edge Function) และใช้ payment gateway ยืนยันยอดเอง */
 var SITES=[['Shoply Store','ร้านค้าออนไลน์',990,9900,'#2563EB','#38BDF8'],['Corpo Prime','เว็บไซต์บริษัท',590,5900,'#1E3A8A','#60A5FA'],['Folio Studio','เว็บไซต์ Portfolio',390,3900,'#0EA5E9','#BAE6FD'],['Learnly Course','เว็บไซต์คอร์สออนไลน์',1290,12900,'#3B82F6','#93C5FD'],['Servo Booking','เว็บไซต์ธุรกิจบริการ',690,6900,'#2563EB','#7DD3FC'],['Launch One','เว็บไซต์ Landing Page',299,2990,'#38BDF8','#E0F2FE']];
-var COUPONS={WELCOME10:10};
+var SLUGS=['shoply-store','corpo-prime','folio-studio','learnly-course','servo-booking','launch-one'];
+var COUPONS={};
 var $=function(s){return document.querySelector(s)},fmt=function(n){return '฿'+n.toLocaleString('th-TH',{maximumFractionDigits:2})},ic=function(){window.lucide&&lucide.createIcons()};
 var q=new URLSearchParams(location.search),id=parseInt(q.get('id'),10);if(!(id>=0&&id<SITES.length))id=0;
 var S=SITES[id],cy=q.get('c')=='y'?'y':'m',disc=0,code='';
@@ -192,24 +195,30 @@ document.querySelectorAll('input').forEach(function(i){i.addEventListener('input
 
 /* submit */
 function bad(g,on){$(g).classList.toggle('bad',on);return on}
-$('#f').addEventListener('submit',function(e){e.preventDefault();
+function restoreCheckout(){try{var raw=sessionStorage.getItem('wr-checkout-pending');if(!raw)return;var d=JSON.parse(raw);sessionStorage.removeItem('wr-checkout-pending');$('#name').value=d.name||'';$('#email').value=d.email||'';$('#tel').value=d.tel||'';$('#dom').value=d.domain||'';if(d.own){document.querySelector('input[name=dm][value=own]').checked=true;$('#own').classList.add('on')}}catch(e){}}
+restoreCheckout();
+$('#f').addEventListener('submit',async function(e){e.preventDefault();
  var errs=[bad('#g-name',$('#name').value.trim().length<2),bad('#g-email',!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test($('#email').value.trim())),bad('#g-tel',!/^0\d{8,9}$/.test($('#tel').value.replace(/[\s-]/g,'')))];
  var own=document.querySelector('input[name=dm]:checked').value=='own';if(own)errs.push(bad('#own',!/^([a-z0-9-]+\.)+[a-z]{2,}$/i.test($('#dom').value.trim())));
  var pm=document.querySelector('input[name=pm]:checked').value;
- if(pm=='bank'&&!$('#slip').files.length){errs.push(true);toast('กรุณาแนบสลิปการโอนเงิน')}
  var tos=!$('#tos').checked;$('#g-tos').classList.toggle('bad',tos);errs.push(tos);
  if(errs.some(Boolean)){var f=document.querySelector('.bad input, .bad');if(f&&f.focus)f.focus();if(!$('#toast').classList.contains('show'))toast('กรุณาตรวจสอบช่องที่ขึ้นสีแดง');return}
- var b=$('#pay'),b2=$('#pay2');b.disabled=b2.disabled=true;b.querySelector('span').textContent='กำลังดำเนินการ...';
- setTimeout(function(){success(pm)},1200)});
+ var cfg=window.WEBRENT_SUPABASE;if(!window.supabase||!cfg){toast('ยังไม่ได้ตั้งค่า Supabase');return}
+ var sb=window.supabase.createClient(cfg.url,cfg.anonKey),auth=await sb.auth.getSession();
+ if(!auth.data||!auth.data.session){sessionStorage.setItem('wr-checkout-pending',JSON.stringify({name:$('#name').value.trim(),email:$('#email').value.trim(),tel:$('#tel').value.trim(),domain:$('#dom').value.trim(),own:own}));location.href='auth.html?next='+encodeURIComponent(location.pathname.split('/').pop()+location.search);return}
+ var b=$('#pay'),b2=$('#pay2');b.disabled=b2.disabled=true;b.querySelector('span').textContent='กำลังสร้างออเดอร์…';
+ try{var result=await sb.rpc('create_rental_order',{p_website_slug:SLUGS[id],p_billing_cycle:cy=='y'?'yearly':'monthly',p_customer_name:$('#name').value.trim(),p_customer_email:$('#email').value.trim(),p_customer_phone:$('#tel').value.replace(/[\s-]/g,''),p_domain_type:own?'own_domain':'subdomain',p_custom_domain:own?$('#dom').value.trim():null,p_payment_method:pm=='bank'?'bank_transfer':pm=='card'?'card':'promptpay'});
+   if(result.error)throw result.error;showOrder(result.data)
+ }catch(err){b.disabled=b2.disabled=false;b.querySelector('span').textContent='สร้างคำสั่งเช่า';toast('บันทึกออเดอร์ไม่สำเร็จ: '+(err.message||'กรุณาลองใหม่'))}
+});
 
-function success(pm){clearInterval(tmr);var c=calc(),no='WR-'+Date.now().toString().slice(-8),email=$('#email').value.trim();
- var verify=pm=='bank'?'ทีมงานกำลังตรวจสอบสลิป ใช้เวลาไม่เกิน 1 ชั่วโมงในเวลาทำการ':'เราได้รับการชำระเงินแล้ว';
+function showOrder(order){clearInterval(tmr);var email=$('#email').value.trim();
  $('#mbar').style.display='none';
- $('#steps').innerHTML='<span class="dn"><i>✓</i><b>เลือกเว็บไซต์</b></span><hr><span class="dn"><i>✓</i><b>ชำระเงิน</b></span><hr><span class="on"><i>3</i><b>เสร็จสิ้น</b></span>';
- $('#lay').outerHTML='<div class="card ok-card"><div class="big"><i data-lucide="check"></i></div><h1>'+(pm=='bank'?'ส่งข้อมูลการโอนเงินแล้ว':'ชำระเงินสำเร็จ')+'</h1><p>'+verify+'<br>เราส่งอีเมลยืนยันไปที่ <b style="color:var(--t)">'+email.replace(/</g,'&lt;')+'</b></p>'+
- '<div class="sum"><div><span>เลขที่คำสั่งเช่า</span><b>'+no+'</b></div><div><span>เว็บไซต์</span><b>'+S[0]+'</b></div><div><span>รอบการเช่า</span><b>'+(cy=='m'?'รายเดือน':'รายปี')+'</b></div><div><span>ยอดชำระ</span><b>'+fmt(c.tot)+'</b></div></div>'+
- '<div class="nx"><div><i data-lucide="mail"></i>ทีมงานจะติดต่อเพื่อรับโลโก้และข้อมูลร้านภายใน 1 วันทำการ</div><div><i data-lucide="rocket"></i>เว็บไซต์พร้อมใช้งานภายใน 24 ชั่วโมง</div></div>'+
- '<a class="btn pri" href="index.html">กลับหน้าแรก</a></div>';ic();scrollTo(0,0)}
+ $('#steps').innerHTML='<span class="dn"><i>✓</i><b>เลือกเว็บไซต์</b></span><hr><span class="dn"><i>✓</i><b>สร้างออเดอร์</b></span><hr><span class="on"><i>3</i><b>รอชำระเงิน</b></span>';
+ $('#lay').outerHTML='<div class="card ok-card"><div class="big"><i data-lucide="check"></i></div><h1>บันทึกออเดอร์แล้ว</h1><p>ออเดอร์อยู่ในสถานะ <b style="color:var(--t)">รอชำระเงิน</b> ระบบยังไม่ได้ตัดเงินหรือยืนยันการชำระ</p>'+
+ '<div class="sum"><div><span>เลขที่คำสั่งเช่า</span><b>'+String(order.order_number).replace(/</g,'&lt;')+'</b></div><div><span>เว็บไซต์</span><b>'+S[0]+'</b></div><div><span>อีเมล</span><b>'+email.replace(/</g,'&lt;')+'</b></div><div><span>ยอดตามแพ็กเกจ</span><b>'+fmt(Number(order.total_amount))+'</b></div></div>'+
+ '<div class="nx"><div><i data-lucide="info"></i>ระบบรับชำระเงินจริงและการจัดเก็บสลิปยังไม่ได้เชื่อมต่อ</div></div>'+
+ '<a class="btn pri" href="orders.html">ดูรายการออเดอร์</a></div>';ic();scrollTo(0,0)}
 
 render();startTimer();ic();
 </script>

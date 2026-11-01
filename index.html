@@ -163,7 +163,7 @@ footer h4{color:var(--t);font-size:15px;margin-bottom:12px}footer ul{list-style:
     <div class="links">
       <a href="#top">หน้าแรก</a><a href="#sites">เว็บไซต์ให้เช่า</a><a href="#cats">หมวดหมู่เว็บไซต์</a><a href="#how">วิธีใช้งาน</a><a href="#price">ราคาและแพ็กเกจ</a>
     </div>
-    <div class="act"><a class="login btn" href="auth.html?next=admin.html">เข้าสู่ระบบ</a><a class="btn pri" href="auth.html?mode=signup">สมัครสมาชิก</a></div>
+    <div class="act" id="accountActions"><a class="login btn" href="auth.html">เข้าสู่ระบบ</a><a class="btn pri" href="auth.html?mode=signup">สมัครสมาชิก</a></div>
     <button class="burger" id="burger" aria-label="เปิดเมนู" aria-expanded="false"><i data-lucide="menu"></i></button>
   </div>
 </nav>
@@ -265,6 +265,8 @@ footer h4{color:var(--t);font-size:15px;margin-bottom:12px}footer ul{list-style:
 <div class="toast" id="toast" role="status"><i data-lucide="check-circle-2"></i><span></span></div>
 
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 <script>
 var $=function(s){return document.querySelector(s)},ic=function(){window.lucide&&lucide.createIcons()};
 var fmt=function(n){return n.toLocaleString('th-TH')};
@@ -324,6 +326,7 @@ $('#hs').addEventListener('submit',function(e){e.preventDefault();term=$('#q').v
 $('#q').addEventListener('input',function(){term=this.value.trim();renderSites()});
 $('#burger').addEventListener('click',function(){var o=$('#nav').classList.toggle('open');this.setAttribute('aria-expanded',o)});
 $('#yr').textContent=new Date().getFullYear()+543;
+try{var cfg=window.WEBRENT_SUPABASE;if(window.supabase&&cfg&&cfg.url.indexOf('YOUR-PROJECT')<0&&cfg.anonKey.indexOf('YOUR_')!==0){var authClient=window.supabase.createClient(cfg.url,cfg.anonKey);authClient.auth.getSession().then(async function(r){var session=r.data&&r.data.session;if(!session)return;var role=await authClient.rpc('is_admin'),dest=role.data===true?'admin.html':'profile.html';$('#accountActions').innerHTML='<a class="btn sec" href="orders.html">รายการออเดอร์</a><a class="btn pri" href="'+dest+'">บัญชีของฉัน</a><button class="btn login" id="signOutHome" type="button">ออกจากระบบ</button>';$('#signOutHome').addEventListener('click',async function(){await authClient.auth.signOut();location.reload()})})}}catch(e){}
 ic();
 </script>
 </body>
