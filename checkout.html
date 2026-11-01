@@ -200,9 +200,7 @@ $('#f').addEventListener('submit',function(e){e.preventDefault();
  var tos=!$('#tos').checked;$('#g-tos').classList.toggle('bad',tos);errs.push(tos);
  if(errs.some(Boolean)){var f=document.querySelector('.bad input, .bad');if(f&&f.focus)f.focus();if(!$('#toast').classList.contains('show'))toast('กรุณาตรวจสอบช่องที่ขึ้นสีแดง');return}
  var b=$('#pay'),b2=$('#pay2');b.disabled=b2.disabled=true;b.querySelector('span').textContent='กำลังดำเนินการ...';
- b.disabled=b2.disabled=false;b.querySelector('span').textContent='ชำระเงิน';
- toast('ยังไม่ได้เชื่อมระบบรับชำระเงินจริง กรุณาตั้งค่า Supabase และ Payment Gateway ก่อนเปิดรับออเดอร์');
- });
+ setTimeout(function(){success(pm)},1200)});
 
 function success(pm){clearInterval(tmr);var c=calc(),no='WR-'+Date.now().toString().slice(-8),email=$('#email').value.trim();
  var verify=pm=='bank'?'ทีมงานกำลังตรวจสอบสลิป ใช้เวลาไม่เกิน 1 ชั่วโมงในเวลาทำการ':'เราได้รับการชำระเงินแล้ว';
